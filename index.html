@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutoriel ScienceDirect - Choix OS</title>
+
+<!-- Police Apple-like -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+/* RESET */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+/* BACKGROUND */
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(180deg,#f5f5f7,#ffffff);
+}
+
+/* CONTAINER */
+.container{
+    text-align:center;
+    max-width:800px;
+    padding:40px;
+}
+
+/* TITLE */
+h1{
+    font-size:2.5rem;
+    font-weight:600;
+    color:#1d1d1f;
+    margin-bottom:10px;
+}
+
+p{
+    color:#6e6e73;
+    margin-bottom:40px;
+    font-size:1.1rem;
+}
+
+/* OS GRID */
+.os-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:30px;
+}
+
+/* CARD */
+.os-card{
+    background:#ffffff;
+    border-radius:20px;
+    padding:40px 20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    text-decoration:none;
+    color:#1d1d1f;
+    transition:transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.os-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(0,0,0,0.12);
+}
+
+/* ICON */
+.os-icon{
+    font-size:70px;
+    margin-bottom:20px;
+}
+
+/* LABEL */
+.os-label{
+    font-size:1.3rem;
+    font-weight:500;
+}
+
+/* FOOTER */
+footer{
+    margin-top:60px;
+    font-size:0.9rem;
+    color:#9e9ea4;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Tutoriel ScienceDirect</h1>
+    <p>Choisissez votre système d’exploitation pour commencer le tutoriel</p>
+
+    <div class="os-grid">
+
+        <!-- MAC -->
+        <a href="macos.html" class="os-card">
+            <img class="os-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg">
+            <div class="os-label">macOS</div>
+        </a>
+
+        <!-- WINDOWS -->
+        <a href="windows.html" class="os-card">
+            <img class="os-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg">
+            <div class="os-label">Windows</div>
+        </a>
+
+        <!-- LINUX -->
+        <a href="linux.html" class="os-card">
+            <img class="os-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg">
+            <div class="os-label">Linux</div>
+        </a>
+
+    </div>
+
+    <footer>
+        Bibliothèque Universitaire — Tutoriel Export ScienceDirect
+    </footer>
+
+</div>
+
+</body>
+</html>
