@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutoriel Windows - Export ScienceDirect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f5f5f7;
+            --card-bg: #ffffff;
+            --accent-color: #F26522;
+            /* ScienceDirect Orange */
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* HEADER */
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            /* Increased max-width to allow button to be further left */
+            margin: 0 auto;
+            padding: 0 40px;
+            /* More padding on sides */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--accent-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+            /* Positioning logic change if needed, but flexbox usually handles 'space-between' well. 
+               To force it "more to the left" relative to a centered title, absolute positioning is often better. */
+            position: absolute;
+            left: 40px;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 auto;
+            /* Center the title explicitly */
+        }
+
+        /* MAIN */
+        main {
+            max-width: 900px;
+            /* Reduced from 1000px */
+            margin: 60px auto;
+            padding: 0 24px;
+        }
+
+        /* ... */
+
+        /* STEPS */
+        .step {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            /* Reduced gap slightly */
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s ease forwards;
+            max-width: 850px;
+            /* Constrain width of steps specifically */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .step:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* INSTRUCTION BUBBLE */
+        .instruction {
+            flex: 1;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .step-badge {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
+        .instruction h2 {
+            margin: 0 0 16px 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .instruction p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        .instruction strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* VISUAL */
+        .visual {
+            flex: 1.3;
+            position: relative;
+        }
+
+        .visual img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.4s ease;
+        }
+
+        .visual:hover img {
+            transform: scale(1.02);
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 80px 24px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid #e1e1e1;
+            background: #fff;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .step {
+                flex-direction: column !important;
+                gap: 30px;
+                margin-bottom: 80px;
+            }
+
+            .instruction {
+                width: 100%;
+                box-sizing: border-box;
+                text-align: left;
+            }
+
+            .visual {
+                width: 100%;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="back-link">← Retour au choix de l'OS</a>
+            <h1>ScienceDirect & Zotero</h1>
+            <div style="width: 100px;"></div> <!-- Spacer for balance -->
+        </div>
+    </header>
+
+    <main>
+        <div class="intro">
+            <h2>Guide pour Windows</h2>
+            <p>Suivez ce guide pas à pas pour maîtriser l'export vers Zotero.</p>
+        </div>
+
+        <!-- Média Audiovisuel -->
+        <section class="media-section" style="text-align: center; margin-bottom: 80px;">
+            <h3>Démonstration Vidéo</h3>
+            <div
+                style="background: #000; width: 100%; max-width: 800px; height: 450px; margin: 20px auto; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white;">
+                [Vidéo de démonstration à insérer ici]
+            </div>
+        </section>
+
+        <!-- STEP 1 -->
+        <section class="step" style="animation-delay: 0.1s;">
+            <div class="instruction">
+                <span class="step-badge">Étape 1</span>
+                <h2>Connexion via la BU</h2>
+                <p>Pour accéder gratuitement aux articles complets, passez toujours par le <strong>portail de votre
+                        Bibliothèque Universitaire</strong>. Authentifiez-vous avec vos identifiants étudiants.</p>
+            </div>
+            <div class="visual">
+                <!-- Placeholder for BU Portal -->
+                <img src="https://placehold.co/600x400/png?text=Portail+BU+Connexion"
+                    alt="Connexion au portail de la BU">
+            </div>
+        </section>
+
+        <!-- STEP 2 -->
+        <section class="step" style="animation-delay: 0.15s;">
+            <div class="instruction">
+                <span class="step-badge">Étape 2</span>
+                <h2>Recherche sur ScienceDirect</h2>
+                <p>Une fois sur ScienceDirect, utilisez la barre de recherche principale. Entrez vos
+                    <strong>mots-clés</strong> (en anglais de préférence) pour trouver des articles pertinents.
+                </p>
+            </div>
+            <div class="visual">
+                <img src="img/3.png" alt="Barre de recherche ScienceDirect">
+            </div>
+        </section>
+
+        <!-- STEP 3 -->
+        <section class="step" style="animation-delay: 0.2s;">
+            <div class="instruction">
+                <span class="step-badge">Étape 3</span>
+                <h2>Sélection des Résultats</h2>
+                <p>Dans la liste des résultats, identifiez les sources utiles. <strong>Cochez la case</strong> située à
+                    gauche de chaque titre pour les ajouter à votre sélection d'export.</p>
+            </div>
+            <div class="visual">
+                <img src="img/3.png" alt="Sélection des articles avec les cases à cocher">
+            </div>
+        </section>
+
+        <!-- STEP 4 -->
+        <section class="step" style="animation-delay: 0.25s;">
+            <div class="instruction">
+                <span class="step-badge">Étape 4</span>
+                <h2>Menu d'Exportation</h2>
+                <p>En haut de la liste de résultats, repérez le lien <strong>"Export"</strong>. Cliquez dessus pour
+                    dérouler les options d'exportation disponibles.</p>
+            </div>
+            <div class="visual">
+                <img src="img/6.png" alt="Menu Export de ScienceDirect">
+            </div>
+        </section>
+
+        <!-- STEP 5 -->
+        <section class="step" style="animation-delay: 0.3s;">
+            <div class="instruction">
+                <span class="step-badge">Étape 5</span>
+                <h2>Choix du Format RIS</h2>
+                <p>Choisissez l'option <strong>"Export citation to RIS"</strong>.</p>
+                <div
+                    style="background: rgba(242, 101, 34, 0.1); padding: 15px; border-radius: 12px; margin-top: 15px; border-left: 4px solid var(--accent-color);">
+                    <p style="font-size: 0.9rem; color: #d35400; margin: 0; font-weight: 500;">Note importante :</p>
+                    <p style="font-size: 0.9rem; margin: 5px 0 0 0;">Le nom "Zotero" n'apparaît pas dans le menu. C'est
+                        normal ! Le format <strong>RIS</strong> est le standard qu'il faut utiliser.</p>
+                </div>
+            </div>
+            <div class="visual">
+                <img src="img/zotero_connector.png" alt="Choix du format RIS">
+            </div>
+        </section>
+
+        <!-- STEP 6 -->
+        <section class="step" style="animation-delay: 0.35s;">
+            <div class="instruction">
+                <span class="step-badge">Étape 6</span>
+                <h2>Téléchargement du Fichier</h2>
+                <p>Le fichier <code>sciencedirect.ris</code> se télécharge automatiquement. Vérifiez qu'il est bien
+                    présent dans votre dossier <strong>"Téléchargements"</strong>.</p>
+            </div>
+            <div class="visual">
+                <!-- Placeholder for Download Folder -->
+                <img src="https://placehold.co/600x400/png?text=Dossier+Téléchargements"
+                    alt="Fichier RIS dans le dossier téléchargements">
+            </div>
+        </section>
+
+        <!-- STEP 7 -->
+        <section class="step" style="animation-delay: 0.4s;">
+            <div class="instruction">
+                <span class="step-badge">Étape 7</span>
+                <h2>Import dans Zotero</h2>
+                <p>Ouvrez Zotero et cliquez sur <strong>Fichier > Importer</strong>. Sélectionnez le fichier RIS. Une
+                    fenêtre vous confirmera le nombre de références importées.</p>
+            </div>
+            <div class="visual">
+                <img src="https://placehold.co/600x400/png?text=Import+Zotero" alt="Interface d'importation Zotero">
+            </div>
+        </section>
+
+        <!-- STEP 8 -->
+        <section class="step" style="animation-delay: 0.45s;">
+            <div class="instruction">
+                <span class="step-badge">Étape 8</span>
+                <h2>Vérification et Utilisation</h2>
+                <p>Vérifiez que les données (Auteurs, Dates) sont correctes dans Zotero. Vous pouvez maintenant utiliser
+                    ces références dans Word via le plugin Zotero.</p>
+            </div>
+            <div class="visual">
+                <img src="https://placehold.co/600x400/png?text=Bibliothèque+Zotero"
+                    alt="Références visibles dans Zotero">
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section class="quiz-section"
+            style="max-width: 800px; margin: 100px auto; background: white; padding: 40px; border-radius: 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+            <h2 style="text-align: center; margin-bottom: 30px;">Testez vos connaissances</h2>
+
+            <div class="quiz-question" style="margin-bottom: 20px;">
+                <p style="font-weight: 600; margin-bottom: 10px;">1. Quel format de fichier faut-il choisir pour
+                    l'export ?</p>
+                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q1" value="wrong">
+                    BibTeX</label>
+                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q1" value="correct">
+                    RIS</label>
+                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q1" value="wrong">
+                    CSV</label>
+            </div>
+
+            <div class="quiz-question" style="margin-bottom: 20px;">
+                <p style="font-weight: 600; margin-bottom: 10px;">2. Où se trouve le bouton d'export sur ScienceDirect ?
+                </p>
+                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q2" value="wrong"> En bas
+                    de page</label>
+                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q2" value="correct"> En
+                    haut de la liste des résultats</label>
+            </div>
+
+            <div class="quiz-question" style="margin-bottom: 20px;">
+                <p style="font-weight: 600; margin-bottom: 10px;">3. Peut-on exporter plusieurs articles à la fois ?</p>
+                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q3" value="correct"> Oui,
+                    en cochant plusieurs cases</label>
+                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q3" value="wrong"> Non, un
+                    par un seulement</label>
+            </div>
+
+            <button onclick="checkQuiz()"
+                style="background: var(--accent-color); color: white; border: none; padding: 12px 24px; border-radius: 20px; cursor: pointer; font-size: 1rem; margin-top: 10px; width: 100%;">Vérifier
+                mes réponses</button>
+            <div id="quiz-result" style="margin-top: 20px; text-align: center; font-weight: 600;"></div>
+        </section>
+
+    </main>
+
+    <!-- CONTACT SECTION -->
+    <footer style="background: #333; color: white; padding: 60px 20px; text-align: center;">
+        <h3 style="margin-bottom: 20px;">Besoin d'aide ?</h3>
+        <p style="margin-bottom: 30px; color: #ccc;">Les bibliothécaires sont là pour vous accompagner.</p>
+        <a href="mailto:bibliotheque@univ-reims.fr"
+            style="background: var(--accent-color); color: white; text-decoration: none; padding: 12px 24px; border-radius: 20px; font-weight: 500;">Contacter
+            la BU</a>
+        <p style="margin-top: 60px; font-size: 0.8rem; color: #888;">Projet SAé 1.05 — IUT de Reims<br>Réalisé par Ayoub
+            SEGHIR & Khalil MOUGHAMIR</p>
+    </footer>
+
+    <script>
+        function checkQuiz() {
+            let score = 0;
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+
+            if (q1 && q1.value === "correct") score++;
+            if (q2 && q2.value === "correct") score++;
+            if (q3 && q3.value === "correct") score++;
+
+            const resultDiv = document.getElementById('quiz-result');
+            if (score === 3) {
+                resultDiv.innerHTML = "🎉 Bravo ! 3/3. Vous êtes prêt à exporter vos références.";
+                resultDiv.style.color = "#28a745";
+            } else {
+                resultDiv.innerHTML = `Vous avez ${score}/3. Relisez le guide et réessayez !`;
+                resultDiv.style.color = "#dc3545";
+            }
+        }
+    </script>
+
+</body>
+
+</html>

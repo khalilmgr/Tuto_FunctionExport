@@ -1,130 +1,179 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tutoriel ScienceDirect - Choix OS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutoriel ScienceDirect - Choix OS</title>
 
-<!-- Police Apple-like -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Police Apple-like -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-<style>
-/* RESET */
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family: 'Inter', sans-serif;
-}
+    <style>
+        /* RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
 
-/* BACKGROUND */
-body{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(180deg,#f5f5f7,#ffffff);
-}
+        :root {
+            --accent-color: #F26522;
+            /* ScienceDirect Orange */
+        }
 
-/* CONTAINER */
-.container{
-    text-align:center;
-    max-width:800px;
-    padding:40px;
-}
+        /* BACKGROUND */
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, #f5f5f7, #ffffff);
+        }
 
-/* TITLE */
-h1{
-    font-size:2.5rem;
-    font-weight:600;
-    color:#1d1d1f;
-    margin-bottom:10px;
-}
+        /* CONTAINER */
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 40px;
+        }
 
-p{
-    color:#6e6e73;
-    margin-bottom:40px;
-    font-size:1.1rem;
-}
+        /* TITLE */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 10px;
+        }
 
-/* OS GRID */
-.os-grid{
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap:30px;
-}
+        p {
+            color: #6e6e73;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
 
-/* CARD */
-.os-card{
-    background:#ffffff;
-    border-radius:20px;
-    padding:40px 20px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.08);
-    text-decoration:none;
-    color:#1d1d1f;
-    transition:transform 0.3s ease, box-shadow 0.3s ease;
-}
+        /* OS GRID */
+        .os-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
 
-.os-card:hover{
-    transform:translateY(-8px);
-    box-shadow:0 20px 40px rgba(0,0,0,0.12);
-}
+        /* CARD */
+        .os-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 40px 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            text-decoration: none;
+            color: #1d1d1f;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-/* ICON */
-.os-icon{
-    font-size:70px;
-    margin-bottom:20px;
-}
+        .os-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(242, 101, 34, 0.15);
+            /* Orange shadow */
+            border: 1px solid var(--accent-color);
+        }
 
-/* LABEL */
-.os-label{
-    font-size:1.3rem;
-    font-weight:500;
-}
+        /* LOGO SCIENCEDIRECT */
+        .sd-logo-link {
+            position: absolute;
+            top: 10px;
+            /* Closer to top */
+            left: 10px;
+            /* Closer to left */
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            z-index: 100;
+            display: block;
+            /* Ensure link wraps image properly */
+        }
 
-/* FOOTER */
-footer{
-    margin-top:60px;
-    font-size:0.9rem;
-    color:#9e9ea4;
-}
-</style>
+        .sd-logo-link:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .sd-logo-img {
+            height: 140px;
+            /* Slightly larger (was 120px) */
+            width: auto;
+        }
+
+        /* RESPONSIVE LOGO adjustment */
+        @media (max-width: 600px) {
+            .sd-logo-link {
+                position: static;
+                display: block;
+                margin: 0 auto 20px auto;
+                text-align: center;
+            }
+        }
+
+        /* ICON */
+        .os-icon {
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+
+        /* LABEL */
+        .os-label {
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: 60px;
+            font-size: 0.9rem;
+            color: #9e9ea4;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+    <!-- LOGO SCIENCEDIRECT -->
+    <a href="https://www.sciencedirect.com/" target="_blank" class="sd-logo-link" title="Aller sur ScienceDirect">
+        <img src="ScienceDirect.banner-removebg-preview.png" alt="ScienceDirect Logo" class="sd-logo-img">
+    </a>
 
-    <h1>Tutoriel ScienceDirect</h1>
-    <p>Choisissez votre système d’exploitation pour commencer le tutoriel</p>
+    <div class="container">
 
-    <div class="os-grid">
+        <h1>Tutoriel ScienceDirect</h1>
+        <p>Choisissez votre système d’exploitation pour commencer le tutoriel</p>
 
-        <!-- MAC -->
-        <a href="macos.html" class="os-card">
-            <img class="os-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg">
-            <div class="os-label">macOS</div>
-        </a>
+        <div class="os-grid">
 
-        <!-- WINDOWS -->
-        <a href="windows.html" class="os-card">
-            <img class="os-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg">
-            <div class="os-label">Windows</div>
-        </a>
+            <!-- MAC -->
+            <a href="macos.html" class="os-card">
+                <img class="os-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg">
+                <div class="os-label">macOS</div>
+            </a>
 
-        <!-- LINUX -->
-        <a href="linux.html" class="os-card">
-            <img class="os-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg">
-            <div class="os-label">Linux</div>
-        </a>
+            <!-- WINDOWS -->
+            <a href="windows.html" class="os-card">
+                <img class="os-logo"
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg">
+                <div class="os-label">Windows</div>
+            </a>
+
+            <!-- LINUX -->
+            <a href="linux.html" class="os-card">
+                <img class="os-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg">
+                <div class="os-label">Linux</div>
+            </a>
+
+        </div>
+
+        <footer>
+            Bibliothèque Universitaire — Tutoriel Export ScienceDirect
+        </footer>
 
     </div>
 
-    <footer>
-        Bibliothèque Universitaire — Tutoriel Export ScienceDirect
-    </footer>
-
-</div>
-
 </body>
+
 </html>
