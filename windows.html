@@ -208,6 +208,86 @@
                 gap: 15px;
                 text-align: center;
             }
+
+            .lang-selector {
+                position: static !important;
+                margin-top: 10px;
+                justify-content: center;
+            }
+        }
+
+        /* LANG SELECTOR */
+        .lang-selector {
+            position: absolute;
+            right: 40px;
+            z-index: 101;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .lang-selector.open .lang-dropdown {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .lang-option {
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+            color: #111;
+        }
+
+        .lang-option:hover {
+            background: var(--bg-color);
+        }
+
+        .lang-option img {
+            width: 20px;
+            border-radius: 2px;
         }
 
         /* LIGHTBOX */
@@ -293,23 +373,48 @@
 
     <header>
         <div class="header-content">
-            <a href="index.html" class="back-link">← Accueil</a>
-            <h1>ScienceDirect & Zotero</h1>
-            <div style="width: 100px;"></div> <!-- Spacer for balance -->
+            <a href="index.html" class="back-link" data-fr="← Accueil" data-en="← Home">← Accueil</a>
+            <h1 data-fr="Export ScienceDirect" data-en="ScienceDirect Export">Export ScienceDirect</h1>
+
+            <!-- LANG SELECTOR -->
+            <div class="lang-selector" id="langSelector">
+                <button class="lang-btn" id="currentLangBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                        </path>
+                    </svg>
+                    <span id="currentLangText">FR</span>
+                </button>
+                <div class="lang-dropdown">
+                    <div class="lang-option" onclick="setLang('fr')">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="FR"> Français
+                    </div>
+                    <div class="lang-option" onclick="setLang('en')">
+                        <img src="https://flagcdn.com/w20/gb.png" alt="EN"> English
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
     <main>
-        <div class="intro">
-            <h2>Guide pour Windows</h2>
-            <p>Suivez ce guide pas à pas pour maîtriser l'export vers Zotero.</p>
+        <div class="intro" style="text-align: center; margin-top: 30px; margin-bottom: 70px;">
+            <p style="font-weight: 600; font-size: 1.8rem; color: var(--accent-color); line-height: 1.4; max-width: 700px; margin: 0 auto;"
+                data-fr="Guide d'exportation ScienceDirect vers Zotero."
+                data-en="Guide for exporting from ScienceDirect to Zotero.">
+                Guide d'exportation ScienceDirect vers Zotero.
+            </p>
         </div>
 
         <!-- Média Audiovisuel -->
         <section class="media-section" style="text-align: center; margin-bottom: 80px;">
-            <h3>Démonstration Vidéo</h3>
-            <div
-                style="background: #000; width: 100%; max-width: 800px; height: 450px; margin: 20px auto; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white;">
+            <h3 data-fr="Démonstration Vidéo" data-en="Video Demonstration">Démonstration Vidéo</h3>
+            <div style="background: #000; width: 100%; max-width: 800px; height: 450px; margin: 20px auto; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white;"
+                data-fr="[Vidéo de démonstration à insérer ici]" data-en="[Video demonstration to insert here]">
                 [Vidéo de démonstration à insérer ici]
             </div>
         </section>
@@ -442,16 +547,20 @@
         </style>
 
         <div class="prereq-block">
-            <span class="prereq-tag">
+            <span class="prereq-tag" data-fr="⚠&#xFE0E;&nbsp; Prérequis indispensable"
+                data-en="⚠&#xFE0E;&nbsp; Essential Prerequisite">
                 ⚠&#xFE0E;&nbsp; Prérequis indispensable
             </span>
-            <h2>Installation de Zotero</h2>
-            <p class="prereq-desc">
+            <h2 data-fr="Installation de Zotero" data-en="Installing Zotero">Installation de Zotero</h2>
+            <p class="prereq-desc"
+                data-fr="Avant de commencer le tutoriel, vous devez avoir installé <strong>Zotero</strong> sur votre poste."
+                data-en="Before starting the tutorial, you must have <strong>Zotero</strong> installed on your computer.">
                 Avant de commencer le tutoriel, vous devez avoir installé <strong>Zotero</strong> sur votre poste.
             </p>
 
             <div class="prereq-btns">
-                <a href="https://www.zotero.org/download/" target="_blank" class="prereq-btn-primary">
+                <a href="https://www.zotero.org/download/" target="_blank" class="prereq-btn-primary"
+                    data-fr="&#8595;&nbsp; Télécharger Zotero" data-en="&#8595;&nbsp; Download Zotero">
                     &#8595;&nbsp; Télécharger Zotero
                 </a>
             </div>
@@ -460,13 +569,18 @@
         <!-- STEP 1 -->
         <section class="step" style="animation-delay: 0.1s;">
             <div class="instruction">
-                <span class="step-badge">Étape 1</span>
-                <h2>Accès à ScienceDirect</h2>
-                <p>Rendez-vous sur le site via ce lien : <a href="https://www-sciencedirect-com.urca.idm.oclc.org/"
+                <span class="step-badge" data-fr="Étape 1" data-en="Step 1">Étape 1</span>
+                <h2 data-fr="Accès à ScienceDirect" data-en="Access ScienceDirect">Accès à ScienceDirect</h2>
+                <p data-fr="Rendez-vous sur le site via ce lien : <a href=&quot;https://www-sciencedirect-com.urca.idm.oclc.org/&quot; target=&quot;_blank&quot; style=&quot;color: var(--accent-color); font-weight: 600; text-decoration: none;&quot;>ScienceDirect</a>."
+                    data-en="Go to the site via this link: <a href=&quot;https://www-sciencedirect-com.urca.idm.oclc.org/&quot; target=&quot;_blank&quot; style=&quot;color: var(--accent-color); font-weight: 600; text-decoration: none;&quot;>ScienceDirect</a>.">
+                    Rendez-vous sur le site via ce lien : <a href="https://www-sciencedirect-com.urca.idm.oclc.org/"
                         target="_blank"
                         style="color: var(--accent-color); font-weight: 600; text-decoration: none;">ScienceDirect</a>.
                 </p>
-                <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">Vous serez redirigé automatiquement via le
+                <p style="font-size: 0.9rem; color: #666; margin-top: 10px;"
+                    data-fr="Vous serez redirigé automatiquement via le portail de la BU."
+                    data-en="You will be automatically redirected via the library portal.">Vous serez redirigé
+                    automatiquement via le
                     portail de la BU.</p>
             </div>
             <div class="visual">
@@ -477,9 +591,12 @@
         <!-- STEP 2 -->
         <section class="step" style="animation-delay: 0.15s;">
             <div class="instruction">
-                <span class="step-badge">Étape 2</span>
-                <h2>Recherche sur ScienceDirect</h2>
-                <p>Une fois sur ScienceDirect, utilisez la barre de recherche principale. Entrez vos
+                <span class="step-badge" data-fr="Étape 2" data-en="Step 2">Étape 2</span>
+                <h2 data-fr="Recherche sur ScienceDirect" data-en="Search on ScienceDirect">Recherche sur ScienceDirect
+                </h2>
+                <p data-fr="Une fois sur ScienceDirect, utilisez la barre de recherche principale. Entrez vos <strong>mots-clés</strong> (en anglais de préférence) pour trouver des articles pertinents."
+                    data-en="Once on ScienceDirect, use the main search bar. Enter your <strong>keywords</strong> (preferably in English) to find relevant articles.">
+                    Une fois sur ScienceDirect, utilisez la barre de recherche principale. Entrez vos
                     <strong>mots-clés</strong> (en anglais de préférence) pour trouver des articles pertinents.
                 </p>
             </div>
@@ -491,9 +608,11 @@
         <!-- STEP 3 -->
         <section class="step" style="animation-delay: 0.2s;">
             <div class="instruction">
-                <span class="step-badge">Étape 3</span>
-                <h2>Sélection des Résultats</h2>
-                <p>Dans la liste des résultats, identifiez les sources utiles. <strong>Cochez la case</strong> située à
+                <span class="step-badge" data-fr="Étape 3" data-en="Step 3">Étape 3</span>
+                <h2 data-fr="Sélection des Résultats" data-en="Select Results">Sélection des Résultats</h2>
+                <p data-fr="Dans la liste des résultats, identifiez les sources utiles. <strong>Cochez la case</strong> située à gauche de chaque titre pour les ajouter à votre sélection d'export."
+                    data-en="In the results list, identify useful sources. <strong>Check the box</strong> located to the left of each title to add them to your export selection.">
+                    Dans la liste des résultats, identifiez les sources utiles. <strong>Cochez la case</strong> située à
                     gauche de chaque titre pour les ajouter à votre sélection d'export.</p>
             </div>
             <div class="visual">
@@ -504,9 +623,11 @@
         <!-- STEP 4 -->
         <section class="step" style="animation-delay: 0.25s;">
             <div class="instruction">
-                <span class="step-badge">Étape 4</span>
-                <h2>Menu d'Exportation</h2>
-                <p>En haut de la liste de résultats, repérez le lien <strong>"Export"</strong>. Cliquez dessus pour
+                <span class="step-badge" data-fr="Étape 4" data-en="Step 4">Étape 4</span>
+                <h2 data-fr="Menu d'Exportation" data-en="Export Menu">Menu d'Exportation</h2>
+                <p data-fr="En haut de la liste de résultats, repérez le lien <strong>&quot;Export&quot;</strong>. Cliquez dessus pour dérouler les options d'exportation disponibles."
+                    data-en="At the top of the results list, locate the <strong>&quot;Export&quot;</strong> link. Click on it to expand the available export options.">
+                    En haut de la liste de résultats, repérez le lien <strong>"Export"</strong>. Cliquez dessus pour
                     dérouler les options d'exportation disponibles.</p>
             </div>
             <div class="visual" style="display:flex; align-items:center; justify-content:center;">
@@ -517,13 +638,13 @@
         <!-- STEP 5 -->
         <section class="step" style="animation-delay: 0.3s;">
             <div class="instruction">
-                <span class="step-badge">Étape 5</span>
-                <h2>Choix du Format</h2>
-                <p>Dans le menu qui s'affiche, choisissez <strong>"Export citation to RIS"</strong>.</p>
+                <span class="step-badge" data-fr="Étape 5" data-en="Step 5">Étape 5</span>
+                <h2 data-fr="Choix du Format" data-en="Format Selection">Choix du Format</h2>
+                <p data-fr="Dans le menu qui s'affiche, choisissez <strong>&quot;Export citation to RIS&quot;</strong>." data-en="In the menu that appears, choose <strong>&quot;Export citation to RIS&quot;</strong>.">Dans le menu qui s'affiche, choisissez <strong>"Export citation to RIS"</strong>.</p>
                 <div
                     style="background: rgba(242, 101, 34, 0.1); padding: 15px; border-radius: 12px; margin-top: 15px; border-left: 4px solid var(--accent-color);">
-                    <p style="font-size: 0.9rem; color: #d35400; margin: 0; font-weight: 500;">Note importante :</p>
-                    <p style="font-size: 0.9rem; margin: 5px 0 0 0;">Le nom "Zotero" n'apparaît pas dans le menu. C'est
+                    <p style="font-size: 0.9rem; color: #d35400; margin: 0; font-weight: 500;" data-fr="Note importante :" data-en="Important note:">Note importante :</p>
+                    <p style="font-size: 0.9rem; margin: 5px 0 0 0;" data-fr="Le nom &quot;Zotero&quot; n'apparaît pas dans le menu. C'est normal ! Le format <strong>RIS</strong> est celui qu'il faut sélectionner pour Zotero." data-en="The name &quot;Zotero&quot; doesn't appear in the menu. This is normal! The <strong>RIS</strong> format is the one you need to select for Zotero.">Le nom "Zotero" n'apparaît pas dans le menu. C'est
                         normal ! Le format <strong>RIS</strong> est celui qu'il faut sélectionner pour Zotero.</p>
                 </div>
             </div>
@@ -538,9 +659,9 @@
             style="max-width: 850px; margin: -40px auto 70px auto; background: #F0F7FF; border: 1px solid #C3DCF5; border-radius: 16px; padding: 18px 24px; display: flex; align-items: flex-start; gap: 14px;">
             <span style="font-size: 1.4rem; line-height: 1;">&#x2139;&#xFE0F;</span>
             <div>
-                <p style="font-size: 0.95rem; font-weight: 600; color: #1a4f8a; margin: 0 0 4px 0;">Même principe pour
+                <p style="font-size: 0.95rem; font-weight: 600; color: #1a4f8a; margin: 0 0 4px 0;" data-fr="Même principe pour BibTeX et Texte" data-en="Same principle for BibTeX and Text">Même principe pour
                     BibTeX et Texte</p>
-                <p style="font-size: 0.88rem; color: #3a6ea5; margin: 0; line-height: 1.55;">
+                <p style="font-size: 0.88rem; color: #3a6ea5; margin: 0; line-height: 1.55;" data-fr="Le processus est identique : choisissez simplement <strong>&quot;Export citation to BibTeX&quot;</strong> (LaTeX, Overleaf…) ou <strong>&quot;Export citation to text&quot;</strong> selon vos besoins." data-en="The process is identical: simply choose <strong>&quot;Export citation to BibTeX&quot;</strong> (LaTeX, Overleaf…) or <strong>&quot;Export citation to text&quot;</strong> according to your needs.">
                     Le processus est identique : choisissez simplement
                     <strong>"Export citation to BibTeX"</strong> (LaTeX, Overleaf…) ou <strong>"Export citation to
                         text"</strong> selon vos besoins.
@@ -551,12 +672,12 @@
         <!-- STEP 6 -->
         <section class="step" style="animation-delay: 0.35s;">
             <div class="instruction">
-                <span class="step-badge">Étape 6</span>
-                <h2>Téléchargement du Fichier</h2>
-                <p>Après avoir cliqué sur <strong>"Export citation to RIS"</strong>, le fichier
+                <span class="step-badge" data-fr="Étape 6" data-en="Step 6">Étape 6</span>
+                <h2 data-fr="Téléchargement du Fichier" data-en="File Download">Téléchargement du Fichier</h2>
+                <p data-fr="Après avoir cliqué sur <strong>&quot;Export citation to RIS&quot;</strong>, le fichier <code>ScienceDirect_citations_[...].ris</code> se télécharge automatiquement." data-en="After clicking on <strong>&quot;Export citation to RIS&quot;</strong>, the file <code>ScienceDirect_citations_[...].ris</code> downloads automatically.">Après avoir cliqué sur <strong>"Export citation to RIS"</strong>, le fichier
                     <code>ScienceDirect_citations_[...].ris</code> se télécharge automatiquement.
                 </p>
-                <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">Vérifiez qu'il apparaît bien dans votre
+                <p style="font-size: 0.9rem; color: #666; margin-top: 10px;" data-fr="Vérifiez qu'il apparaît bien dans votre dossier <strong>Téléchargements</strong> (cerclé en rouge sur la capture)." data-en="Check that it appears in your <strong>Downloads</strong> folder (circled in red on the screenshot).">Vérifiez qu'il apparaît bien dans votre
                     dossier <strong>Téléchargements</strong> (cerclé en rouge sur la capture).</p>
             </div>
             <div class="visual">
@@ -567,9 +688,9 @@
         <!-- STEP 7 -->
         <section class="step" style="animation-delay: 0.4s;">
             <div class="instruction">
-                <span class="step-badge">Étape 7</span>
-                <h2>Import dans Zotero</h2>
-                <p>Ouvrez <strong>Zotero</strong>, allez dans <strong>Fichier &gt; Importer</strong>, puis sélectionnez
+                <span class="step-badge" data-fr="Étape 7" data-en="Step 7">Étape 7</span>
+                <h2 data-fr="Import dans Zotero" data-en="Import into Zotero">Import dans Zotero</h2>
+                <p data-fr="Ouvrez <strong>Zotero</strong>, allez dans <strong>Fichier &gt; Importer</strong>, puis sélectionnez le fichier <code>.ris</code> téléchargé. La référence apparaît alors dans <strong>Ma bibliothèque</strong>." data-en="Open <strong>Zotero</strong>, go to <strong>File &gt; Import</strong>, then select the downloaded <code>.ris</code> file. The reference will then appear in <strong>My Library</strong>.">Ouvrez <strong>Zotero</strong>, allez dans <strong>Fichier &gt; Importer</strong>, puis sélectionnez
                     le fichier <code>.ris</code> téléchargé. La référence apparaît alors dans <strong>Ma
                         bibliothèque</strong>.</p>
             </div>
@@ -581,9 +702,9 @@
         <!-- STEP 8 -->
         <section class="step" style="animation-delay: 0.45s;">
             <div class="instruction">
-                <span class="step-badge">Étape 8</span>
-                <h2>Vérification et Utilisation</h2>
-                <p>Dans le panneau de droite de Zotero, vérifiez que le <strong>titre</strong>, le <strong>nom du
+                <span class="step-badge" data-fr="Étape 8" data-en="Step 8">Étape 8</span>
+                <h2 data-fr="Vérification et Utilisation" data-en="Verification and Usage">Vérification et Utilisation</h2>
+                <p data-fr="Dans le panneau de droite de Zotero, vérifiez que le <strong>titre</strong>, le <strong>nom du fichier</strong> et la <strong>date de modification</strong> sont corrects. Vous pouvez maintenant utiliser cette référence dans Word via le plugin Zotero." data-en="In the right panel of Zotero, verify that the <strong>title</strong>, the <strong>file name</strong> and the <strong>modification date</strong> are correct. You can now use this reference in Word via the Zotero plugin.">Dans le panneau de droite de Zotero, vérifiez que le <strong>titre</strong>, le <strong>nom du
                         fichier</strong> et la <strong>date de modification</strong> sont corrects. Vous pouvez
                     maintenant utiliser cette référence dans Word via le plugin Zotero.</p>
             </div>
@@ -595,10 +716,10 @@
         <!-- QUIZ SECTION -->
         <section class="quiz-section"
             style="max-width: 800px; margin: 100px auto; background: white; padding: 40px; border-radius: 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
-            <h2 style="text-align: center; margin-bottom: 30px;">Testez vos connaissances</h2>
+            <h2 style="text-align: center; margin-bottom: 30px;" data-fr="Testez vos connaissances" data-en="Test your knowledge">Testez vos connaissances</h2>
 
             <div class="quiz-question" style="margin-bottom: 20px;">
-                <p style="font-weight: 600; margin-bottom: 10px;">1. Quel format de fichier faut-il choisir pour
+                <p style="font-weight: 600; margin-bottom: 10px;" data-fr="1. Quel format de fichier faut-il choisir pour l'export ?" data-en="1. Which file format should you choose for export?">1. Quel format de fichier faut-il choisir pour
                     l'export ?</p>
                 <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q1" value="wrong">
                     BibTeX</label>
@@ -609,24 +730,24 @@
             </div>
 
             <div class="quiz-question" style="margin-bottom: 20px;">
-                <p style="font-weight: 600; margin-bottom: 10px;">2. Où se trouve le bouton d'export sur ScienceDirect ?
+                <p style="font-weight: 600; margin-bottom: 10px;" data-fr="2. Où se trouve le bouton d'export sur ScienceDirect ?" data-en="2. Where is the export button located on ScienceDirect?">2. Où se trouve le bouton d'export sur ScienceDirect ?
                 </p>
-                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q2" value="wrong"> En bas
-                    de page</label>
-                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q2" value="correct"> En
-                    haut de la liste des résultats</label>
+                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q2" value="wrong"> <span data-fr="En bas de page" data-en="At the bottom of the page">En bas
+                    de page</span></label>
+                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q2" value="correct"> <span data-fr="En haut de la liste des résultats" data-en="At the top of the results list">En
+                    haut de la liste des résultats</span></label>
             </div>
 
             <div class="quiz-question" style="margin-bottom: 20px;">
-                <p style="font-weight: 600; margin-bottom: 10px;">3. Peut-on exporter plusieurs articles à la fois ?</p>
-                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q3" value="correct"> Oui,
-                    en cochant plusieurs cases</label>
-                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q3" value="wrong"> Non, un
-                    par un seulement</label>
+                <p style="font-weight: 600; margin-bottom: 10px;" data-fr="3. Peut-on exporter plusieurs articles à la fois ?" data-en="3. Can you export multiple articles at once?">3. Peut-on exporter plusieurs articles à la fois ?</p>
+                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q3" value="correct"> <span data-fr="Oui, en cochant plusieurs cases" data-en="Yes, by checking multiple boxes">Oui,
+                    en cochant plusieurs cases</span></label>
+                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q3" value="wrong"> <span data-fr="Non, un par un seulement" data-en="No, only one by one">Non, un
+                    par un seulement</span></label>
             </div>
 
-            <button onclick="checkQuiz()"
-                style="background: var(--accent-color); color: white; border: none; padding: 12px 24px; border-radius: 20px; cursor: pointer; font-size: 1rem; margin-top: 10px; width: 100%;">Vérifier
+            <button onclick="checkQuiz()" id="quizCheckBtn"
+                style="background: var(--accent-color); color: white; border: none; padding: 12px 24px; border-radius: 20px; cursor: pointer; font-size: 1rem; margin-top: 10px; width: 100%;" data-fr="Vérifier mes réponses" data-en="Check my answers">Vérifier
                 mes réponses</button>
             <div id="quiz-result" style="margin-top: 20px; text-align: center; font-weight: 600;"></div>
         </section>
@@ -635,12 +756,13 @@
 
     <!-- CONTACT SECTION -->
     <footer style="background: #333; color: white; padding: 60px 20px; text-align: center;">
-        <h3 style="margin-bottom: 20px;">Besoin d'aide ?</h3>
-        <p style="margin-bottom: 30px; color: #ccc;">Les bibliothécaires sont là pour vous accompagner.</p>
-        <a href="mailto:bibliotheque@univ-reims.fr"
-            style="background: var(--accent-color); color: white; text-decoration: none; padding: 12px 24px; border-radius: 20px; font-weight: 500;">Contacter
+        <h3 style="margin-bottom: 20px;" data-fr="Besoin d'aide ?" data-en="Need Help?">Besoin d'aide ?</h3>
+        <p style="margin-bottom: 30px; color: #ccc;" data-fr="Les bibliothécaires sont là pour vous accompagner." data-en="Librarians are here to help you.">Les bibliothécaires sont là pour vous accompagner.</p>
+        <a href="https://www.univ-reims.fr/bu/bibliotheques/bu-moulin-de-la-housse/bu-moulin-de-la-housse,9206,17210.html"
+            target="_blank"
+            style="background: var(--accent-color); color: white; text-decoration: none; padding: 12px 24px; border-radius: 20px; font-weight: 500;" data-fr="Contacter la BU" data-en="Contact the Library">Contacter
             la BU</a>
-        <p style="margin-top: 60px; font-size: 0.8rem; color: #888;">Projet SAé 1.05 — IUT de Reims<br>Réalisé par Ayoub
+        <p style="margin-top: 60px; font-size: 0.8rem; color: #888;" data-fr="Projet SAé 1.05 — IUT de Reims<br>Réalisé par Ayoub SEGHIR & Khalil MOUGHAMIR" data-en="SAé 1.05 Project — IUT de Reims<br>Created by Ayoub SEGHIR & Khalil MOUGHAMIR">Projet SAé 1.05 — IUT de Reims<br>Réalisé par Ayoub
             SEGHIR & Khalil MOUGHAMIR</p>
     </footer>
 
@@ -695,6 +817,82 @@
         lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
         lbClose.addEventListener('click', closeLightbox);
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+        /* ---------- GESTION LANGUES ---------- */
+        const langSelector = document.getElementById('langSelector');
+        const langBtn = document.getElementById('currentLangBtn');
+        const langText = document.getElementById('currentLangText');
+
+        if(langBtn) {
+            langBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                langSelector.classList.toggle('open');
+            });
+
+            document.addEventListener('click', () => {
+                langSelector.classList.remove('open');
+            });
+        }
+
+        // Variable globale pour stocker la langue active (utile pour le quizz)
+        let currentLang = 'fr';
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('tuto_lang', lang);
+            if(langText) langText.innerText = lang.toUpperCase();
+            
+            // Met à jour les textes statiques
+            document.querySelectorAll('[data-en]').forEach(el => {
+                // Sauvegarde le texte original français si pas encore fait
+                if (!el.hasAttribute('data-fr')) {
+                    el.setAttribute('data-fr', el.innerHTML);
+                }
+                
+                if (lang === 'en' && el.getAttribute('data-en')) {
+                    el.innerHTML = el.getAttribute('data-en');
+                } else if (lang === 'fr' && el.getAttribute('data-fr')) {
+                    el.innerHTML = el.getAttribute('data-fr');
+                }
+            });
+
+            // Si le quizz a déjà été checké, on met à jour le message
+            const resultDiv = document.getElementById('quiz-result');
+            if (resultDiv.innerHTML !== '') {
+                checkQuiz(); 
+            }
+        }
+
+        // Surcharge de checkQuiz pour gérer la langue du résultat
+        function checkQuiz() {
+            let score = 0;
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+
+            if (q1 && q1.value === "correct") score++;
+            if (q2 && q2.value === "correct") score++;
+            if (q3 && q3.value === "correct") score++;
+
+            const resultDiv = document.getElementById('quiz-result');
+            
+            if (score === 3) {
+                resultDiv.innerHTML = currentLang === 'en' 
+                    ? "🎉 Great job! 3/3. You are ready to export your references."
+                    : "🎉 Bravo ! 3/3. Vous êtes prêt à exporter vos références.";
+                resultDiv.style.color = "#28a745";
+            } else {
+                resultDiv.innerHTML = currentLang === 'en'
+                    ? `You scored ${score}/3. Review the guide and try again!`
+                    : `Vous avez ${score}/3. Relisez le guide et réessayez !`;
+                resultDiv.style.color = "#dc3545";
+            }
+        }
+
+        // Init au chargement
+        const savedLang = localStorage.getItem('tuto_lang') || 'fr';
+        setLang(savedLang);
+
     </script>
 
 </body>
