@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutoriel Windows - Export ScienceDirect</title>
+    <title>Tutoriel — Export ScienceDirect → Zotero</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #FAF6F1;
             --card-bg: #FFFEFB;
-            --accent-color: #F26522;
-            /* ScienceDirect Orange */
+            --accent-color: #E8601A;
             --text-primary: #1d1d1f;
+            --text-dark: #1C1C1E;
             --text-secondary: #86868b;
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
             --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
@@ -43,10 +43,8 @@
 
         .header-content {
             max-width: 1200px;
-            /* Increased max-width to allow button to be further left */
             margin: 0 auto;
             padding: 0 40px;
-            /* More padding on sides */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -59,8 +57,6 @@
             font-weight: 500;
             font-size: 0.95rem;
             transition: opacity 0.2s;
-            /* Positioning logic change if needed, but flexbox usually handles 'space-between' well. 
-               To force it "more to the left" relative to a centered title, absolute positioning is often better. */
             position: absolute;
             left: 40px;
         }
@@ -74,18 +70,136 @@
             font-size: 1.5rem;
             font-weight: 600;
             margin: 0 auto;
-            /* Center the title explicitly */
+        }
+
+        /* AIDE BUTTON */
+        .aide-btn {
+            position: absolute;
+            right: 180px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            padding: 7px 14px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .aide-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* STEP SIDEBAR */
+        .step-sidebar {
+            position: fixed;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .sidebar-track {
+            position: absolute;
+            top: 20px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            background: rgba(232, 96, 26, 0.15);
+            border-radius: 1px;
+            pointer-events: none;
+        }
+
+        .sidebar-node {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            text-decoration: none;
+            z-index: 1;
+        }
+
+        .sidebar-square {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            background: rgba(232, 96, 26, 0.2);
+            border: 2px solid rgba(232, 96, 26, 0.35);
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .sidebar-node:hover .sidebar-square {
+            width: 14px;
+            height: 14px;
+            background: rgba(232, 96, 26, 0.45);
+            border-color: var(--accent-color);
+        }
+
+        .sidebar-node.active .sidebar-square {
+            width: 20px;
+            height: 20px;
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            border-radius: 5px;
+            box-shadow: 0 0 0 5px rgba(232, 96, 26, 0.18), 0 4px 14px rgba(232, 96, 26, 0.4);
+        }
+
+        /* Tooltip à gauche du carré */
+        .sidebar-tooltip {
+            position: absolute;
+            right: calc(100% + 10px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1C1C1E;
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 500;
+            font-family: inherit;
+            padding: 5px 10px;
+            border-radius: 8px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            transform: translateY(-50%) translateX(4px);
+        }
+
+        .sidebar-tooltip::after {
+            content: '';
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 5px solid transparent;
+            border-left-color: #1C1C1E;
+            border-right: none;
+        }
+
+        .sidebar-node:hover .sidebar-tooltip {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* Masquer sur petits écrans */
+        @media (max-width: 1100px) {
+            .step-sidebar { display: none; }
         }
 
         /* MAIN */
         main {
             max-width: 900px;
-            /* Reduced from 1000px */
             margin: 60px auto;
             padding: 0 24px;
         }
-
-        /* ... */
 
         /* STEPS */
         .step {
@@ -93,26 +207,22 @@
             align-items: center;
             justify-content: space-between;
             gap: 40px;
-            /* Reduced gap slightly */
             margin-bottom: 80px;
             opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 0.8s ease forwards;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
             max-width: 850px;
-            /* Constrain width of steps specifically */
             margin-left: auto;
             margin-right: auto;
         }
 
-        .step:nth-child(even) {
-            flex-direction: row-reverse;
+        .step.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .step:nth-child(even) {
+            flex-direction: row-reverse;
         }
 
         /* INSTRUCTION BUBBLE */
@@ -156,6 +266,15 @@
             font-weight: 600;
         }
 
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
+            font-size: 0.88em;
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 5px;
+            padding: 2px 6px;
+            color: #c0392b;
+        }
+
         /* VISUAL */
         .visual {
             flex: 1.3;
@@ -169,6 +288,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(0, 0, 0, 0.05);
             transition: transform 0.4s ease;
+            cursor: zoom-in;
         }
 
         .visual:hover img {
@@ -179,41 +299,171 @@
         footer {
             text-align: center;
             padding: 80px 24px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            border-top: 1px solid #e1e1e1;
-            background: #fff;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: #28231F;
         }
 
-        /* RESPONSIVE */
+        footer h3 {
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        footer > p {
+            margin-bottom: 30px;
+            color: #b0a89e;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        footer a:hover {
+            background: #C94F10;
+        }
+
+        footer .credits {
+            margin-top: 60px;
+            font-size: 0.8rem;
+            color: #5a5048;
+        }
+
+        /* =====================
+           RESPONSIVE — TABLETTE (≤ 900px)
+        ===================== */
         @media (max-width: 900px) {
+            header { padding: 14px 0; }
+
+            .header-content {
+                padding: 0 20px;
+                position: relative;
+            }
+
+            .back-link {
+                position: static;
+                font-size: 0.88rem;
+            }
+
+            .aide-btn { display: none; }
+
+            .lang-selector {
+                position: static !important;
+                justify-content: flex-end;
+            }
+
+            main {
+                margin: 40px auto;
+                padding: 0 16px;
+            }
+
             .step {
                 flex-direction: column !important;
-                gap: 30px;
-                margin-bottom: 80px;
+                gap: 24px;
+                margin-bottom: 60px;
             }
 
             .instruction {
                 width: 100%;
                 box-sizing: border-box;
-                text-align: left;
+                padding: 28px;
             }
 
-            .visual {
-                width: 100%;
-            }
+            .instruction h2 { font-size: 1.5rem; }
+
+            .visual { width: 100%; }
+
+            .prereq-block { padding: 32px 28px; }
+
+        }
+
+        /* =====================
+           RESPONSIVE — MOBILE (≤ 600px)
+        ===================== */
+        @media (max-width: 600px) {
+            header { padding: 12px 0; }
 
             .header-content {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
+                padding: 0 16px;
+                flex-wrap: wrap;
+                gap: 10px;
             }
 
-            .lang-selector {
-                position: static !important;
-                margin-top: 10px;
-                justify-content: center;
+            h1 { font-size: 1.1rem; }
+
+            .back-link { font-size: 0.85rem; }
+
+            main {
+                margin: 28px auto;
+                padding: 0 14px;
             }
+
+            .step { margin-bottom: 48px; gap: 18px; }
+
+            .instruction {
+                padding: 22px 18px;
+                border-radius: 18px;
+            }
+
+            .instruction h2 { font-size: 1.3rem; }
+
+            .instruction p { font-size: 0.97rem; }
+
+            .prereq-block {
+                padding: 24px 18px;
+                border-radius: 20px;
+            }
+
+            .prereq-block h2 { font-size: 1.5rem; }
+
+            .prereq-btn-primary {
+                min-width: unset;
+                width: 100%;
+                font-size: 0.95rem;
+                padding: 14px 20px;
+            }
+
+            .intro h2 { font-size: 1.4rem !important; }
+
+            /* Vidéo */
+            .media-section div { border-radius: 14px !important; }
+
+            /* Quiz */
+            .quiz-section {
+                padding: 24px 18px !important;
+                border-radius: 20px !important;
+                margin: 60px auto !important;
+            }
+
+            #quizCheckBtn { font-size: 0.95rem; }
+
+            /* Footer */
+            footer { padding: 52px 20px; }
+
+            /* Lightbox nav masqués sur mobile (swipe non géré) */
+            .lb-nav { display: none; }
+        }
+
+        /* =====================
+           RESPONSIVE — PETIT MOBILE (≤ 400px)
+        ===================== */
+        @media (max-width: 400px) {
+            h1 { font-size: 1rem; }
+
+            .instruction { padding: 18px 14px; }
+
+            .instruction h2 { font-size: 1.15rem; }
+
+            .step-badge { font-size: 0.72rem; padding: 5px 11px; }
+
+            .prereq-block { padding: 18px 14px; }
+
+            footer { padding: 40px 16px; }
         }
 
         /* LANG SELECTOR */
@@ -291,10 +541,6 @@
         }
 
         /* LIGHTBOX */
-        .visual img {
-            cursor: zoom-in;
-        }
-
         #lightbox {
             display: none;
             position: fixed;
@@ -314,13 +560,8 @@
         }
 
         @keyframes lbFadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         #lightbox img {
@@ -333,15 +574,8 @@
         }
 
         @keyframes lbZoomIn {
-            from {
-                transform: scale(0.78);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+            from { transform: scale(0.78); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         #lightbox-close {
@@ -366,6 +600,131 @@
         #lightbox-close:hover {
             background: rgba(255, 255, 255, 0.28);
         }
+
+        .lb-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, opacity 0.2s;
+            z-index: 10000;
+        }
+
+        .lb-nav:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.28);
+        }
+
+        .lb-nav:disabled {
+            opacity: 0.25;
+            cursor: default;
+        }
+
+        #lb-prev { left: 16px; }
+        #lb-next { right: 16px; }
+
+        /* QUIZ */
+        .quiz-label {
+            display: block;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
+            cursor: pointer;
+        }
+
+        .quiz-label.answer-correct {
+            background: rgba(40, 167, 69, 0.12);
+            color: #1a7a38;
+            font-weight: 600;
+        }
+
+        .quiz-label.answer-wrong {
+            background: rgba(220, 53, 69, 0.10);
+            color: #b02030;
+            text-decoration: line-through;
+        }
+
+        /* PREREQ BLOCK */
+        .prereq-block {
+            max-width: 850px;
+            margin: 0 auto 80px auto;
+            background: #FFFEFB;
+            border: 2px solid var(--accent-color);
+            border-radius: 28px;
+            padding: 48px 52px;
+            box-shadow: 0 12px 48px rgba(232, 96, 26, 0.18);
+        }
+
+        .prereq-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-color);
+            color: white;
+            padding: 7px 18px;
+            border-radius: 100px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 24px;
+        }
+
+        .prereq-block h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .prereq-block .prereq-desc {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            line-height: 1.65;
+        }
+
+        .prereq-btns {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .prereq-btn-primary {
+            flex: 1;
+            min-width: 220px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 18px 28px;
+            border-radius: 100px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            box-shadow: 0 6px 24px rgba(232, 96, 26, 0.3);
+        }
+
+        .prereq-btn-primary:hover {
+            background: #C94F10;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(232, 96, 26, 0.4);
+        }
     </style>
 </head>
 
@@ -376,6 +735,10 @@
             <a href="index.html" class="back-link" data-fr="← Accueil" data-en="← Home">← Accueil</a>
             <h1 data-fr="Export ScienceDirect" data-en="ScienceDirect Export">Export ScienceDirect</h1>
 
+            <a href="https://www.univ-reims.fr/bu/bibliotheques/bu-moulin-de-la-housse/bu-moulin-de-la-housse,9206,17210.html"
+                target="_blank" class="aide-btn"
+                data-fr="Aide" data-en="Help">Aide</a>
+
             <!-- LANG SELECTOR -->
             <div class="lang-selector" id="langSelector">
                 <button class="lang-btn" id="currentLangBtn">
@@ -383,9 +746,7 @@
                         stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path
-                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
-                        </path>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
                     </svg>
                     <span id="currentLangText">FR</span>
                 </button>
@@ -403,154 +764,27 @@
 
     <main>
         <div class="intro" style="text-align: center; margin-top: 30px; margin-bottom: 70px;">
-            <p style="font-weight: 600; font-size: 1.8rem; color: var(--accent-color); line-height: 1.4; max-width: 700px; margin: 0 auto;"
+            <h2 style="font-weight: 600; font-size: 1.8rem; color: var(--accent-color); line-height: 1.4; max-width: 700px; margin: 0 auto;"
                 data-fr="Guide d'exportation ScienceDirect vers Zotero."
                 data-en="Guide for exporting from ScienceDirect to Zotero.">
                 Guide d'exportation ScienceDirect vers Zotero.
-            </p>
+            </h2>
         </div>
 
         <!-- Média Audiovisuel -->
         <section class="media-section" style="text-align: center; margin-bottom: 80px;">
-            <h3 data-fr="Démonstration Vidéo" data-en="Video Demonstration">Démonstration Vidéo</h3>
-            <div
-                style="width: 100%; max-width: 800px; margin: 20px auto; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); line-height: 0;">
-                <video width="100%" controls style="border-radius: 20px; background: #000;">
+            <h3 data-fr="Démonstration Vidéo" data-en="Video Demonstration"
+                style="font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; color: var(--text-primary);">Démonstration Vidéo</h3>
+            <div style="width: 100%; max-width: 800px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); line-height: 0;">
+                <video width="100%" controls poster="img/Acceuil_SD.png" style="border-radius: 20px; background: #000;">
                     <source src="vids/Video_Tuto_SciencesDirect.mp4" type="video/mp4">
                     <span data-fr="Votre navigateur ne prend pas en charge la lecture de vidéos."
-                        data-en="Your browser does not support video playback.">Votre navigateur ne prend pas en charge
-                        la lecture de vidéos.</span>
+                        data-en="Your browser does not support video playback.">Votre navigateur ne prend pas en charge la lecture de vidéos.</span>
                 </video>
             </div>
         </section>
 
         <!-- PREREQUISITE ZOTERO -->
-        <style>
-            .prereq-block {
-                max-width: 850px;
-                margin: 0 auto 80px auto;
-                background: #FFFEFB;
-                border: 2px solid var(--accent-color);
-                border-radius: 28px;
-                padding: 48px 52px;
-                box-shadow: 0 12px 48px rgba(242, 101, 34, 0.18);
-                animation: fadeIn 0.7s ease forwards;
-            }
-
-            .prereq-tag {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                background: var(--accent-color);
-                color: white;
-                padding: 7px 18px;
-                border-radius: 100px;
-                font-size: 0.78rem;
-                font-weight: 700;
-                text-transform: uppercase;
-                letter-spacing: 0.06em;
-                margin-bottom: 24px;
-            }
-
-            .prereq-block h2 {
-                font-size: 2rem;
-                font-weight: 600;
-                letter-spacing: -0.03em;
-                margin-bottom: 12px;
-                color: var(--text-primary);
-            }
-
-            .prereq-block .prereq-desc {
-                font-size: 1.05rem;
-                color: var(--text-secondary);
-                margin-bottom: 32px;
-                line-height: 1.65;
-            }
-
-            .prereq-checklist {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                margin-bottom: 36px;
-            }
-
-            .prereq-checklist li {
-                list-style: none;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                font-size: 1rem;
-                color: var(--text-primary);
-            }
-
-            .prereq-checklist li::before {
-                content: '';
-                width: 22px;
-                height: 22px;
-                border-radius: 50%;
-                background: rgba(242, 101, 34, 0.12);
-                border: 2px solid var(--accent-color);
-                flex-shrink: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .prereq-btns {
-                display: flex;
-                gap: 16px;
-                flex-wrap: wrap;
-            }
-
-            .prereq-btn-primary {
-                flex: 1;
-                min-width: 220px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                background: var(--accent-color);
-                color: white;
-                text-decoration: none;
-                font-size: 1.05rem;
-                font-weight: 600;
-                padding: 18px 28px;
-                border-radius: 100px;
-                transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-                box-shadow: 0 6px 24px rgba(242, 101, 34, 0.3);
-            }
-
-            .prereq-btn-primary:hover {
-                background: #C94F10;
-                transform: translateY(-2px);
-                box-shadow: 0 10px 32px rgba(242, 101, 34, 0.4);
-            }
-
-            .prereq-btn-secondary {
-                flex: 1;
-                min-width: 220px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                background: transparent;
-                color: var(--accent-color);
-                text-decoration: none;
-                font-size: 1.05rem;
-                font-weight: 600;
-                padding: 18px 28px;
-                border-radius: 100px;
-                border: 2px solid var(--accent-color);
-                transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
-            }
-
-            .prereq-btn-secondary:hover {
-                background: var(--accent-color);
-                color: white;
-                transform: translateY(-2px);
-            }
-        </style>
-
         <div class="prereq-block">
             <span class="prereq-tag" data-fr="⚠&#xFE0E;&nbsp; Prérequis indispensable"
                 data-en="⚠&#xFE0E;&nbsp; Essential Prerequisite">
@@ -562,7 +796,6 @@
                 data-en="Before starting the tutorial, you must have <strong>Zotero</strong> installed on your computer.">
                 Avant de commencer le tutoriel, vous devez avoir installé <strong>Zotero</strong> sur votre poste.
             </p>
-
             <div class="prereq-btns">
                 <a href="https://www.zotero.org/download/" target="_blank" class="prereq-btn-primary"
                     data-fr="&#8595;&nbsp; Télécharger Zotero" data-en="&#8595;&nbsp; Download Zotero">
@@ -571,10 +804,47 @@
             </div>
         </div>
 
+        <!-- STEP SIDEBAR -->
+        <nav class="step-sidebar" id="stepSidebar" aria-label="Navigation des étapes">
+            <div class="sidebar-track"></div>
+            <a href="#step1" class="sidebar-node active" data-step="step1">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Accès à ScienceDirect" data-en="Access ScienceDirect">Accès à ScienceDirect</span>
+            </a>
+            <a href="#step2" class="sidebar-node" data-step="step2">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Recherche" data-en="Search">Recherche</span>
+            </a>
+            <a href="#step3" class="sidebar-node" data-step="step3">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Sélection des résultats" data-en="Select results">Sélection des résultats</span>
+            </a>
+            <a href="#step4" class="sidebar-node" data-step="step4">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Menu d'exportation" data-en="Export menu">Menu d'exportation</span>
+            </a>
+            <a href="#step5" class="sidebar-node" data-step="step5">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Choix du format" data-en="Format selection">Choix du format</span>
+            </a>
+            <a href="#step6" class="sidebar-node" data-step="step6">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Téléchargement" data-en="Download">Téléchargement</span>
+            </a>
+            <a href="#step7" class="sidebar-node" data-step="step7">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Import dans Zotero" data-en="Import into Zotero">Import dans Zotero</span>
+            </a>
+            <a href="#step8" class="sidebar-node" data-step="step8">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Vérification" data-en="Verification">Vérification</span>
+            </a>
+        </nav>
+
         <!-- STEP 1 -->
-        <section class="step" style="animation-delay: 0.1s;">
+        <section class="step" id="step1">
             <div class="instruction">
-                <span class="step-badge" data-fr="Étape 1" data-en="Step 1">Étape 1</span>
+                <span class="step-badge" data-fr="Étape 1 / 8" data-en="Step 1 / 8">Étape 1 / 8</span>
                 <h2 data-fr="Accès à ScienceDirect" data-en="Access ScienceDirect">Accès à ScienceDirect</h2>
                 <p data-fr="Rendez-vous sur le site via ce lien : <a href=&quot;https://www-sciencedirect-com.urca.idm.oclc.org/&quot; target=&quot;_blank&quot; style=&quot;color: var(--accent-color); font-weight: 600; text-decoration: none;&quot;>ScienceDirect</a>."
                     data-en="Go to the site via this link: <a href=&quot;https://www-sciencedirect-com.urca.idm.oclc.org/&quot; target=&quot;_blank&quot; style=&quot;color: var(--accent-color); font-weight: 600; text-decoration: none;&quot;>ScienceDirect</a>.">
@@ -584,9 +854,7 @@
                 </p>
                 <p style="font-size: 0.9rem; color: #666; margin-top: 10px;"
                     data-fr="Vous serez redirigé automatiquement via le portail de la BU."
-                    data-en="You will be automatically redirected via the library portal.">Vous serez redirigé
-                    automatiquement via le
-                    portail de la BU.</p>
+                    data-en="You will be automatically redirected via the library portal.">Vous serez redirigé automatiquement via le portail de la BU.</p>
             </div>
             <div class="visual">
                 <img src="img/Acceuil_SD.png" alt="Page d'accueil de ScienceDirect">
@@ -594,11 +862,10 @@
         </section>
 
         <!-- STEP 2 -->
-        <section class="step" style="animation-delay: 0.15s;">
+        <section class="step" id="step2">
             <div class="instruction">
-                <span class="step-badge" data-fr="Étape 2" data-en="Step 2">Étape 2</span>
-                <h2 data-fr="Recherche sur ScienceDirect" data-en="Search on ScienceDirect">Recherche sur ScienceDirect
-                </h2>
+                <span class="step-badge" data-fr="Étape 2 / 8" data-en="Step 2 / 8">Étape 2 / 8</span>
+                <h2 data-fr="Recherche sur ScienceDirect" data-en="Search on ScienceDirect">Recherche sur ScienceDirect</h2>
                 <p data-fr="Une fois sur ScienceDirect, utilisez la barre de recherche principale. Entrez vos <strong>mots-clés</strong> (en anglais de préférence) pour trouver des articles pertinents."
                     data-en="Once on ScienceDirect, use the main search bar. Enter your <strong>keywords</strong> (preferably in English) to find relevant articles.">
                     Une fois sur ScienceDirect, utilisez la barre de recherche principale. Entrez vos
@@ -611,9 +878,9 @@
         </section>
 
         <!-- STEP 3 -->
-        <section class="step" style="animation-delay: 0.2s;">
+        <section class="step" id="step3">
             <div class="instruction">
-                <span class="step-badge" data-fr="Étape 3" data-en="Step 3">Étape 3</span>
+                <span class="step-badge" data-fr="Étape 3 / 8" data-en="Step 3 / 8">Étape 3 / 8</span>
                 <h2 data-fr="Sélection des Résultats" data-en="Select Results">Sélection des Résultats</h2>
                 <p data-fr="Dans la liste des résultats, identifiez les sources utiles. <strong>Cochez la case</strong> située à gauche de chaque titre pour les ajouter à votre sélection d'export."
                     data-en="In the results list, identify useful sources. <strong>Check the box</strong> located to the left of each title to add them to your export selection.">
@@ -626,9 +893,9 @@
         </section>
 
         <!-- STEP 4 -->
-        <section class="step" style="animation-delay: 0.25s;">
+        <section class="step" id="step4">
             <div class="instruction">
-                <span class="step-badge" data-fr="Étape 4" data-en="Step 4">Étape 4</span>
+                <span class="step-badge" data-fr="Étape 4 / 8" data-en="Step 4 / 8">Étape 4 / 8</span>
                 <h2 data-fr="Menu d'Exportation" data-en="Export Menu">Menu d'Exportation</h2>
                 <p data-fr="En haut de la liste de résultats, repérez le lien <strong>&quot;Export&quot;</strong>. Cliquez dessus pour dérouler les options d'exportation disponibles."
                     data-en="At the top of the results list, locate the <strong>&quot;Export&quot;</strong> link. Click on it to expand the available export options.">
@@ -641,15 +908,14 @@
         </section>
 
         <!-- STEP 5 -->
-        <section class="step" style="animation-delay: 0.3s;">
+        <section class="step" id="step5">
             <div class="instruction">
-                <span class="step-badge" data-fr="Étape 5" data-en="Step 5">Étape 5</span>
+                <span class="step-badge" data-fr="Étape 5 / 8" data-en="Step 5 / 8">Étape 5 / 8</span>
                 <h2 data-fr="Choix du Format" data-en="Format Selection">Choix du Format</h2>
                 <p data-fr="Dans le menu qui s'affiche, choisissez <strong>&quot;Export citation to RIS&quot;</strong>."
                     data-en="In the menu that appears, choose <strong>&quot;Export citation to RIS&quot;</strong>.">Dans
                     le menu qui s'affiche, choisissez <strong>"Export citation to RIS"</strong>.</p>
-                <div
-                    style="background: rgba(242, 101, 34, 0.1); padding: 15px; border-radius: 12px; margin-top: 15px; border-left: 4px solid var(--accent-color);">
+                <div style="background: rgba(232, 96, 26, 0.1); padding: 15px; border-radius: 12px; margin-top: 15px; border-left: 4px solid var(--accent-color);">
                     <p style="font-size: 0.9rem; color: #d35400; margin: 0; font-weight: 500;"
                         data-fr="Note importante :" data-en="Important note:">Note importante :</p>
                     <p style="font-size: 0.9rem; margin: 5px 0 0 0;"
@@ -660,34 +926,29 @@
                 </div>
             </div>
             <div class="visual" style="display:flex; align-items:center; justify-content:center;">
-                <img src="img/Export_RIS_DS.png" alt="Menu Export avec l'option RIS"
-                    style="max-width:340px; width:100%;">
+                <img src="img/Export_RIS_DS.png" alt="Menu Export avec l'option RIS" style="max-width:340px; width:100%;">
             </div>
         </section>
 
         <!-- INFO BIBTEX / TEXT -->
-        <div
-            style="max-width: 850px; margin: -40px auto 70px auto; background: #F0F7FF; border: 1px solid #C3DCF5; border-radius: 16px; padding: 18px 24px; display: flex; align-items: flex-start; gap: 14px;">
+        <div style="max-width: 850px; margin: -40px auto 70px auto; background: #F0F7FF; border: 1px solid #C3DCF5; border-radius: 16px; padding: 18px 24px; display: flex; align-items: flex-start; gap: 14px;">
             <span style="font-size: 1.4rem; line-height: 1;">&#x2139;&#xFE0F;</span>
             <div>
                 <p style="font-size: 0.95rem; font-weight: 600; color: #1a4f8a; margin: 0 0 4px 0;"
-                    data-fr="Même principe pour BibTeX et Texte" data-en="Same principle for BibTeX and Text">Même
-                    principe pour
-                    BibTeX et Texte</p>
+                    data-fr="Même principe pour BibTeX et Texte" data-en="Same principle for BibTeX and Text">Même principe pour BibTeX et Texte</p>
                 <p style="font-size: 0.88rem; color: #3a6ea5; margin: 0; line-height: 1.55;"
                     data-fr="Le processus est identique : choisissez simplement <strong>&quot;Export citation to BibTeX&quot;</strong> (LaTeX, Overleaf…) ou <strong>&quot;Export citation to text&quot;</strong> selon vos besoins."
                     data-en="The process is identical: simply choose <strong>&quot;Export citation to BibTeX&quot;</strong> (LaTeX, Overleaf…) or <strong>&quot;Export citation to text&quot;</strong> according to your needs.">
                     Le processus est identique : choisissez simplement
-                    <strong>"Export citation to BibTeX"</strong> (LaTeX, Overleaf…) ou <strong>"Export citation to
-                        text"</strong> selon vos besoins.
+                    <strong>"Export citation to BibTeX"</strong> (LaTeX, Overleaf…) ou <strong>"Export citation to text"</strong> selon vos besoins.
                 </p>
             </div>
         </div>
 
         <!-- STEP 6 -->
-        <section class="step" style="animation-delay: 0.35s;">
+        <section class="step" id="step6">
             <div class="instruction">
-                <span class="step-badge" data-fr="Étape 6" data-en="Step 6">Étape 6</span>
+                <span class="step-badge" data-fr="Étape 6 / 8" data-en="Step 6 / 8">Étape 6 / 8</span>
                 <h2 data-fr="Téléchargement du Fichier" data-en="File Download">Téléchargement du Fichier</h2>
                 <p data-fr="Après avoir cliqué sur <strong>&quot;Export citation to RIS&quot;</strong>, le fichier <code>ScienceDirect_citations_[...].ris</code> se télécharge automatiquement."
                     data-en="After clicking on <strong>&quot;Export citation to RIS&quot;</strong>, the file <code>ScienceDirect_citations_[...].ris</code> downloads automatically.">
@@ -697,8 +958,7 @@
                 <p style="font-size: 0.9rem; color: #666; margin-top: 10px;"
                     data-fr="Vérifiez qu'il apparaît bien dans votre dossier <strong>Téléchargements</strong> (cerclé en rouge sur la capture)."
                     data-en="Check that it appears in your <strong>Downloads</strong> folder (circled in red on the screenshot).">
-                    Vérifiez qu'il apparaît bien dans votre
-                    dossier <strong>Téléchargements</strong> (cerclé en rouge sur la capture).</p>
+                    Vérifiez qu'il apparaît bien dans votre dossier <strong>Téléchargements</strong> (cerclé en rouge sur la capture).</p>
             </div>
             <div class="visual">
                 <img src="img/Téléchargment_RIS.png" alt="Fichier RIS dans le dossier Téléchargements Windows">
@@ -706,15 +966,14 @@
         </section>
 
         <!-- STEP 7 -->
-        <section class="step" style="animation-delay: 0.4s;">
+        <section class="step" id="step7">
             <div class="instruction">
-                <span class="step-badge" data-fr="Étape 7" data-en="Step 7">Étape 7</span>
+                <span class="step-badge" data-fr="Étape 7 / 8" data-en="Step 7 / 8">Étape 7 / 8</span>
                 <h2 data-fr="Import dans Zotero" data-en="Import into Zotero">Import dans Zotero</h2>
                 <p data-fr="Ouvrez <strong>Zotero</strong>, allez dans <strong>Fichier &gt; Importer</strong>, puis sélectionnez le fichier <code>.ris</code> téléchargé. La référence apparaît alors dans <strong>Ma bibliothèque</strong>."
                     data-en="Open <strong>Zotero</strong>, go to <strong>File &gt; Import</strong>, then select the downloaded <code>.ris</code> file. The reference will then appear in <strong>My Library</strong>.">
                     Ouvrez <strong>Zotero</strong>, allez dans <strong>Fichier &gt; Importer</strong>, puis sélectionnez
-                    le fichier <code>.ris</code> téléchargé. La référence apparaît alors dans <strong>Ma
-                        bibliothèque</strong>.</p>
+                    le fichier <code>.ris</code> téléchargé. La référence apparaît alors dans <strong>Ma bibliothèque</strong>.</p>
             </div>
             <div class="visual">
                 <img src="img/Import_Zotero_RIS.png" alt="Référence importée visible dans Zotero">
@@ -722,11 +981,10 @@
         </section>
 
         <!-- STEP 8 -->
-        <section class="step" style="animation-delay: 0.45s;">
+        <section class="step" id="step8">
             <div class="instruction">
-                <span class="step-badge" data-fr="Étape 8" data-en="Step 8">Étape 8</span>
-                <h2 data-fr="Vérification et Utilisation" data-en="Verification and Usage">Vérification et Utilisation
-                </h2>
+                <span class="step-badge" data-fr="Étape 8 / 8" data-en="Step 8 / 8">Étape 8 / 8</span>
+                <h2 data-fr="Vérification et Utilisation" data-en="Verification and Usage">Vérification et Utilisation</h2>
                 <p data-fr="Dans le panneau de droite de Zotero, vérifiez que le <strong>titre</strong>, le <strong>nom du fichier</strong> et la <strong>date de modification</strong> sont corrects. Vous pouvez maintenant utiliser cette référence dans Word via le plugin Zotero."
                     data-en="In the right panel of Zotero, verify that the <strong>title</strong>, the <strong>file name</strong> and the <strong>modification date</strong> are correct. You can now use this reference in Word via the Zotero plugin.">
                     Dans le panneau de droite de Zotero, vérifiez que le <strong>titre</strong>, le <strong>nom du
@@ -747,123 +1005,116 @@
             <div class="quiz-question" style="margin-bottom: 20px;">
                 <p style="font-weight: 600; margin-bottom: 10px;"
                     data-fr="1. Quel format de fichier faut-il choisir pour l'export ?"
-                    data-en="1. Which file format should you choose for export?">1. Quel format de fichier faut-il
-                    choisir pour
-                    l'export ?</p>
-                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q1" value="wrong">
-                    BibTeX</label>
-                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q1" value="correct">
-                    RIS</label>
-                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q1" value="wrong">
-                    CSV</label>
+                    data-en="1. Which file format should you choose for export?">1. Quel format de fichier faut-il choisir pour l'export ?</p>
+                <label class="quiz-label"><input type="radio" name="q1" value="wrong"> BibTeX</label>
+                <label class="quiz-label"><input type="radio" name="q1" value="correct"> RIS</label>
+                <label class="quiz-label"><input type="radio" name="q1" value="wrong"> CSV</label>
             </div>
 
             <div class="quiz-question" style="margin-bottom: 20px;">
                 <p style="font-weight: 600; margin-bottom: 10px;"
                     data-fr="2. Où se trouve le bouton d'export sur ScienceDirect ?"
-                    data-en="2. Where is the export button located on ScienceDirect?">2. Où se trouve le bouton d'export
-                    sur ScienceDirect ?
-                </p>
-                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q2" value="wrong"> <span
-                        data-fr="En bas de page" data-en="At the bottom of the page">En bas
-                        de page</span></label>
-                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q2" value="correct"> <span
-                        data-fr="En haut de la liste des résultats" data-en="At the top of the results list">En
-                        haut de la liste des résultats</span></label>
+                    data-en="2. Where is the export button located on ScienceDirect?">2. Où se trouve le bouton d'export sur ScienceDirect ?</p>
+                <label class="quiz-label"><input type="radio" name="q2" value="wrong"> <span
+                        data-fr="En bas de page" data-en="At the bottom of the page">En bas de page</span></label>
+                <label class="quiz-label"><input type="radio" name="q2" value="correct"> <span
+                        data-fr="En haut de la liste des résultats" data-en="At the top of the results list">En haut de la liste des résultats</span></label>
             </div>
 
             <div class="quiz-question" style="margin-bottom: 20px;">
                 <p style="font-weight: 600; margin-bottom: 10px;"
                     data-fr="3. Peut-on exporter plusieurs articles à la fois ?"
-                    data-en="3. Can you export multiple articles at once?">3. Peut-on exporter plusieurs articles à la
-                    fois ?</p>
-                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q3" value="correct"> <span
-                        data-fr="Oui, en cochant plusieurs cases" data-en="Yes, by checking multiple boxes">Oui,
-                        en cochant plusieurs cases</span></label>
-                <label style="display: block; margin-bottom: 5px;"><input type="radio" name="q3" value="wrong"> <span
-                        data-fr="Non, un par un seulement" data-en="No, only one by one">Non, un
-                        par un seulement</span></label>
+                    data-en="3. Can you export multiple articles at once?">3. Peut-on exporter plusieurs articles à la fois ?</p>
+                <label class="quiz-label"><input type="radio" name="q3" value="correct"> <span
+                        data-fr="Oui, en cochant plusieurs cases" data-en="Yes, by checking multiple boxes">Oui, en cochant plusieurs cases</span></label>
+                <label class="quiz-label"><input type="radio" name="q3" value="wrong"> <span
+                        data-fr="Non, un par un seulement" data-en="No, only one by one">Non, un par un seulement</span></label>
             </div>
 
             <button onclick="checkQuiz()" id="quizCheckBtn"
-                style="background: var(--accent-color); color: white; border: none; padding: 12px 24px; border-radius: 20px; cursor: pointer; font-size: 1rem; margin-top: 10px; width: 100%;"
-                data-fr="Vérifier mes réponses" data-en="Check my answers">Vérifier
-                mes réponses</button>
+                style="background: var(--accent-color); color: white; border: none; padding: 12px 24px; border-radius: 20px; cursor: pointer; font-size: 1rem; margin-top: 10px; width: 100%; transition: background 0.2s;"
+                data-fr="Vérifier mes réponses" data-en="Check my answers">Vérifier mes réponses</button>
             <div id="quiz-result" style="margin-top: 20px; text-align: center; font-weight: 600;"></div>
         </section>
 
     </main>
 
     <!-- CONTACT SECTION -->
-    <footer style="background: #333; color: white; padding: 60px 20px; text-align: center;">
-        <h3 style="margin-bottom: 20px;" data-fr="Besoin d'aide ?" data-en="Need Help?">Besoin d'aide ?</h3>
-        <p style="margin-bottom: 30px; color: #ccc;" data-fr="Les bibliothécaires sont là pour vous accompagner."
+    <footer>
+        <h3 data-fr="Besoin d'aide ?" data-en="Need Help?">Besoin d'aide ?</h3>
+        <p data-fr="Les bibliothécaires sont là pour vous accompagner."
             data-en="Librarians are here to help you.">Les bibliothécaires sont là pour vous accompagner.</p>
         <a href="https://www.univ-reims.fr/bu/bibliotheques/bu-moulin-de-la-housse/bu-moulin-de-la-housse,9206,17210.html"
             target="_blank"
-            style="background: var(--accent-color); color: white; text-decoration: none; padding: 12px 24px; border-radius: 20px; font-weight: 500;"
-            data-fr="Contacter la BU" data-en="Contact the Library">Contacter
-            la BU</a>
-        <p style="margin-top: 60px; font-size: 0.8rem; color: #888;"
-            data-fr="Projet SAé 1.05 — IUT de Reims<br>Réalisé par Ayoub SEGHIR & Khalil MOUGHAMIR"
-            data-en="SAé 1.05 Project — IUT de Reims<br>Created by Ayoub SEGHIR & Khalil MOUGHAMIR">Projet SAé 1.05 —
-            IUT de Reims<br>Réalisé par Ayoub
-            SEGHIR & Khalil MOUGHAMIR</p>
+            data-fr="Contacter la BU" data-en="Contact the Library">Contacter la BU</a>
+        <p style="margin-top: 60px; font-size: 0.8rem; color: #5a5048;"
+            data-fr="Réalisé par Ayoub SEGHIR & Khalil MOUGHAMIR"
+            data-en="Created by Ayoub SEGHIR & Khalil MOUGHAMIR">Réalisé par Ayoub SEGHIR & Khalil MOUGHAMIR</p>
     </footer>
-
-    <script>
-        function checkQuiz() {
-            let score = 0;
-            const q1 = document.querySelector('input[name="q1"]:checked');
-            const q2 = document.querySelector('input[name="q2"]:checked');
-            const q3 = document.querySelector('input[name="q3"]:checked');
-
-            if (q1 && q1.value === "correct") score++;
-            if (q2 && q2.value === "correct") score++;
-            if (q3 && q3.value === "correct") score++;
-
-            const resultDiv = document.getElementById('quiz-result');
-            if (score === 3) {
-                resultDiv.innerHTML = "🎉 Bravo ! 3/3. Vous êtes prêt à exporter vos références.";
-                resultDiv.style.color = "#28a745";
-            } else {
-                resultDiv.innerHTML = `Vous avez ${score}/3. Relisez le guide et réessayez !`;
-                resultDiv.style.color = "#dc3545";
-            }
-        }
-    </script>
 
     <!-- LIGHTBOX -->
     <div id="lightbox">
         <button id="lightbox-close" title="Fermer">&times;</button>
+        <button class="lb-nav" id="lb-prev" title="Précédent">&#8249;</button>
         <img id="lightbox-img" src="" alt="">
+        <button class="lb-nav" id="lb-next" title="Suivant">&#8250;</button>
     </div>
 
     <script>
-        // Lightbox
+        /* ---- LIGHTBOX ---- */
         const lb = document.getElementById('lightbox');
         const lbImg = document.getElementById('lightbox-img');
         const lbClose = document.getElementById('lightbox-close');
+        const lbPrev = document.getElementById('lb-prev');
+        const lbNext = document.getElementById('lb-next');
 
-        document.querySelectorAll('.visual img').forEach(img => {
-            img.addEventListener('click', () => {
-                lbImg.src = img.src;
-                lbImg.alt = img.alt;
-                lb.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-        });
+        const lbImages = Array.from(document.querySelectorAll('.visual img'));
+        let lbIndex = 0;
+
+        function openLightbox(index) {
+            lbIndex = index;
+            lbImg.src = lbImages[index].src;
+            lbImg.alt = lbImages[index].alt;
+            lb.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            updateLbNav();
+        }
 
         function closeLightbox() {
             lb.classList.remove('active');
             document.body.style.overflow = '';
         }
 
+        function updateLbNav() {
+            lbPrev.disabled = lbIndex === 0;
+            lbNext.disabled = lbIndex === lbImages.length - 1;
+        }
+
+        lbImages.forEach((img, i) => img.addEventListener('click', () => openLightbox(i)));
+        lbPrev.addEventListener('click', () => { if (lbIndex > 0) openLightbox(lbIndex - 1); });
+        lbNext.addEventListener('click', () => { if (lbIndex < lbImages.length - 1) openLightbox(lbIndex + 1); });
         lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
         lbClose.addEventListener('click', closeLightbox);
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+        document.addEventListener('keydown', e => {
+            if (!lb.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft' && lbIndex > 0) openLightbox(lbIndex - 1);
+            if (e.key === 'ArrowRight' && lbIndex < lbImages.length - 1) openLightbox(lbIndex + 1);
+        });
 
-        /* ---------- GESTION LANGUES ---------- */
+        /* ---- SCROLL ANIMATION ---- */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.step').forEach(step => observer.observe(step));
+
+        /* ---- LANG ---- */
         const langSelector = document.getElementById('langSelector');
         const langBtn = document.getElementById('currentLangBtn');
         const langText = document.getElementById('currentLangText');
@@ -873,13 +1124,9 @@
                 e.stopPropagation();
                 langSelector.classList.toggle('open');
             });
-
-            document.addEventListener('click', () => {
-                langSelector.classList.remove('open');
-            });
+            document.addEventListener('click', () => langSelector.classList.remove('open'));
         }
 
-        // Variable globale pour stocker la langue active (utile pour le quizz)
         let currentLang = 'fr';
 
         function setLang(lang) {
@@ -887,57 +1134,86 @@
             localStorage.setItem('tuto_lang', lang);
             if (langText) langText.innerText = lang.toUpperCase();
 
-            // Met à jour les textes statiques
             document.querySelectorAll('[data-en]').forEach(el => {
-                // Sauvegarde le texte original français si pas encore fait
-                if (!el.hasAttribute('data-fr')) {
-                    el.setAttribute('data-fr', el.innerHTML);
-                }
-
-                if (lang === 'en' && el.getAttribute('data-en')) {
-                    el.innerHTML = el.getAttribute('data-en');
-                } else if (lang === 'fr' && el.getAttribute('data-fr')) {
-                    el.innerHTML = el.getAttribute('data-fr');
-                }
+                if (!el.hasAttribute('data-fr')) el.setAttribute('data-fr', el.innerHTML);
+                el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-fr');
             });
 
-            // Si le quizz a déjà été checké, on met à jour le message
             const resultDiv = document.getElementById('quiz-result');
-            if (resultDiv.innerHTML !== '') {
-                checkQuiz();
-            }
+            if (resultDiv && resultDiv.innerHTML !== '') checkQuiz();
         }
 
-        // Surcharge de checkQuiz pour gérer la langue du résultat
+        /* ---- QUIZ ---- */
         function checkQuiz() {
+            const questions = document.querySelectorAll('.quiz-question');
             let score = 0;
-            const q1 = document.querySelector('input[name="q1"]:checked');
-            const q2 = document.querySelector('input[name="q2"]:checked');
-            const q3 = document.querySelector('input[name="q3"]:checked');
 
-            if (q1 && q1.value === "correct") score++;
-            if (q2 && q2.value === "correct") score++;
-            if (q3 && q3.value === "correct") score++;
+            questions.forEach(q => {
+                const selected = q.querySelector('input:checked');
+                q.querySelectorAll('.quiz-label').forEach(label => {
+                    label.classList.remove('answer-correct', 'answer-wrong');
+                    const input = label.querySelector('input');
+                    if (input.value === 'correct') {
+                        label.classList.add('answer-correct');
+                    } else if (selected && input === selected && input.value === 'wrong') {
+                        label.classList.add('answer-wrong');
+                    }
+                });
+                if (selected && selected.value === 'correct') score++;
+            });
+
+            document.querySelectorAll('.quiz-question input').forEach(i => i.disabled = true);
+            document.getElementById('quizCheckBtn').disabled = true;
 
             const resultDiv = document.getElementById('quiz-result');
-
             if (score === 3) {
                 resultDiv.innerHTML = currentLang === 'en'
-                    ? "🎉 Great job! 3/3. You are ready to export your references."
-                    : "🎉 Bravo ! 3/3. Vous êtes prêt à exporter vos références.";
-                resultDiv.style.color = "#28a745";
+                    ? 'Great job! 3/3 — You are ready to export your references.'
+                    : 'Bravo ! 3/3 — Vous êtes prêt à exporter vos références.';
+                resultDiv.style.color = '#1a7a38';
             } else {
                 resultDiv.innerHTML = currentLang === 'en'
                     ? `You scored ${score}/3. Review the guide and try again!`
                     : `Vous avez ${score}/3. Relisez le guide et réessayez !`;
-                resultDiv.style.color = "#dc3545";
+                resultDiv.style.color = '#b02030';
             }
         }
 
-        // Init au chargement
         const savedLang = localStorage.getItem('tuto_lang') || 'fr';
         setLang(savedLang);
 
+        /* ---- STEP SIDEBAR ---- */
+        const sidebarNodes = document.querySelectorAll('.sidebar-node');
+
+        function setActiveNode(stepId) {
+            sidebarNodes.forEach(node => {
+                node.classList.toggle('active', node.dataset.step === stepId);
+            });
+        }
+
+        // Scroll smooth sur clic
+        sidebarNodes.forEach(node => {
+            node.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.getElementById(node.dataset.step);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        });
+
+        // Détecter l'étape active au scroll via IntersectionObserver
+        const stepSections = document.querySelectorAll('.step[id]');
+        let currentActive = 'step1';
+
+        const sidebarObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    currentActive = entry.target.id;
+                    setActiveNode(currentActive);
+                }
+            });
+        }, { threshold: 0.4 });
+
+        stepSections.forEach(section => sidebarObserver.observe(section));
     </script>
 
 </body>
