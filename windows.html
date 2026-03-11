@@ -72,6 +72,128 @@
             margin: 0 auto;
         }
 
+        /* AIDE BUTTON */
+        .aide-btn {
+            position: absolute;
+            right: 180px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            padding: 7px 14px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .aide-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* STEP SIDEBAR */
+        .step-sidebar {
+            position: fixed;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .sidebar-track {
+            position: absolute;
+            top: 20px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            background: rgba(232, 96, 26, 0.15);
+            border-radius: 1px;
+            pointer-events: none;
+        }
+
+        .sidebar-node {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            text-decoration: none;
+            z-index: 1;
+        }
+
+        .sidebar-square {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            background: rgba(232, 96, 26, 0.2);
+            border: 2px solid rgba(232, 96, 26, 0.35);
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .sidebar-node:hover .sidebar-square {
+            width: 14px;
+            height: 14px;
+            background: rgba(232, 96, 26, 0.45);
+            border-color: var(--accent-color);
+        }
+
+        .sidebar-node.active .sidebar-square {
+            width: 20px;
+            height: 20px;
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            border-radius: 5px;
+            box-shadow: 0 0 0 5px rgba(232, 96, 26, 0.18), 0 4px 14px rgba(232, 96, 26, 0.4);
+        }
+
+        /* Tooltip à gauche du carré */
+        .sidebar-tooltip {
+            position: absolute;
+            right: calc(100% + 10px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1C1C1E;
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 500;
+            font-family: inherit;
+            padding: 5px 10px;
+            border-radius: 8px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            transform: translateY(-50%) translateX(4px);
+        }
+
+        .sidebar-tooltip::after {
+            content: '';
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 5px solid transparent;
+            border-left-color: #1C1C1E;
+            border-right: none;
+        }
+
+        .sidebar-node:hover .sidebar-tooltip {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* Masquer sur petits écrans */
+        @media (max-width: 1100px) {
+            .step-sidebar { display: none; }
+        }
+
         /* MAIN */
         main {
             max-width: 900px;
@@ -212,35 +334,136 @@
             color: #5a5048;
         }
 
-        /* RESPONSIVE */
+        /* =====================
+           RESPONSIVE — TABLETTE (≤ 900px)
+        ===================== */
         @media (max-width: 900px) {
+            header { padding: 14px 0; }
+
+            .header-content {
+                padding: 0 20px;
+                position: relative;
+            }
+
+            .back-link {
+                position: static;
+                font-size: 0.88rem;
+            }
+
+            .aide-btn { display: none; }
+
+            .lang-selector {
+                position: static !important;
+                justify-content: flex-end;
+            }
+
+            main {
+                margin: 40px auto;
+                padding: 0 16px;
+            }
+
             .step {
                 flex-direction: column !important;
-                gap: 30px;
-                margin-bottom: 80px;
+                gap: 24px;
+                margin-bottom: 60px;
             }
 
             .instruction {
                 width: 100%;
                 box-sizing: border-box;
-                text-align: left;
+                padding: 28px;
             }
 
-            .visual {
-                width: 100%;
-            }
+            .instruction h2 { font-size: 1.5rem; }
+
+            .visual { width: 100%; }
+
+            .prereq-block { padding: 32px 28px; }
+
+        }
+
+        /* =====================
+           RESPONSIVE — MOBILE (≤ 600px)
+        ===================== */
+        @media (max-width: 600px) {
+            header { padding: 12px 0; }
 
             .header-content {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
+                padding: 0 16px;
+                flex-wrap: wrap;
+                gap: 10px;
             }
 
-            .lang-selector {
-                position: static !important;
-                margin-top: 10px;
-                justify-content: center;
+            h1 { font-size: 1.1rem; }
+
+            .back-link { font-size: 0.85rem; }
+
+            main {
+                margin: 28px auto;
+                padding: 0 14px;
             }
+
+            .step { margin-bottom: 48px; gap: 18px; }
+
+            .instruction {
+                padding: 22px 18px;
+                border-radius: 18px;
+            }
+
+            .instruction h2 { font-size: 1.3rem; }
+
+            .instruction p { font-size: 0.97rem; }
+
+            .prereq-block {
+                padding: 24px 18px;
+                border-radius: 20px;
+            }
+
+            .prereq-block h2 { font-size: 1.5rem; }
+
+            .prereq-btn-primary {
+                min-width: unset;
+                width: 100%;
+                font-size: 0.95rem;
+                padding: 14px 20px;
+            }
+
+            .intro h2 { font-size: 1.4rem !important; }
+
+            /* Vidéo */
+            .media-section div { border-radius: 14px !important; }
+
+            /* Quiz */
+            .quiz-section {
+                padding: 24px 18px !important;
+                border-radius: 20px !important;
+                margin: 60px auto !important;
+            }
+
+            #quizCheckBtn { font-size: 0.95rem; }
+
+            /* Footer */
+            footer { padding: 52px 20px; }
+
+            /* Lightbox nav masqués sur mobile (swipe non géré) */
+            .lb-nav { display: none; }
+        }
+
+        /* =====================
+           RESPONSIVE — PETIT MOBILE (≤ 400px)
+        ===================== */
+        @media (max-width: 400px) {
+            h1 { font-size: 1rem; }
+
+            .instruction { padding: 18px 14px; }
+
+            .instruction h2 { font-size: 1.15rem; }
+
+            .step-badge { font-size: 0.72rem; padding: 5px 11px; }
+
+            .prereq-block { padding: 18px 14px; }
+
+            footer { padding: 40px 16px; }
         }
 
         /* LANG SELECTOR */
@@ -512,6 +735,10 @@
             <a href="index.html" class="back-link" data-fr="← Accueil" data-en="← Home">← Accueil</a>
             <h1 data-fr="Export ScienceDirect" data-en="ScienceDirect Export">Export ScienceDirect</h1>
 
+            <a href="https://www.univ-reims.fr/bu/bibliotheques/bu-moulin-de-la-housse/bu-moulin-de-la-housse,9206,17210.html"
+                target="_blank" class="aide-btn"
+                data-fr="Aide" data-en="Help">Aide</a>
+
             <!-- LANG SELECTOR -->
             <div class="lang-selector" id="langSelector">
                 <button class="lang-btn" id="currentLangBtn">
@@ -577,8 +804,45 @@
             </div>
         </div>
 
+        <!-- STEP SIDEBAR -->
+        <nav class="step-sidebar" id="stepSidebar" aria-label="Navigation des étapes">
+            <div class="sidebar-track"></div>
+            <a href="#step1" class="sidebar-node active" data-step="step1">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Accès à ScienceDirect" data-en="Access ScienceDirect">Accès à ScienceDirect</span>
+            </a>
+            <a href="#step2" class="sidebar-node" data-step="step2">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Recherche" data-en="Search">Recherche</span>
+            </a>
+            <a href="#step3" class="sidebar-node" data-step="step3">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Sélection des résultats" data-en="Select results">Sélection des résultats</span>
+            </a>
+            <a href="#step4" class="sidebar-node" data-step="step4">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Menu d'exportation" data-en="Export menu">Menu d'exportation</span>
+            </a>
+            <a href="#step5" class="sidebar-node" data-step="step5">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Choix du format" data-en="Format selection">Choix du format</span>
+            </a>
+            <a href="#step6" class="sidebar-node" data-step="step6">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Téléchargement" data-en="Download">Téléchargement</span>
+            </a>
+            <a href="#step7" class="sidebar-node" data-step="step7">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Import dans Zotero" data-en="Import into Zotero">Import dans Zotero</span>
+            </a>
+            <a href="#step8" class="sidebar-node" data-step="step8">
+                <div class="sidebar-square"></div>
+                <span class="sidebar-tooltip" data-fr="Vérification" data-en="Verification">Vérification</span>
+            </a>
+        </nav>
+
         <!-- STEP 1 -->
-        <section class="step">
+        <section class="step" id="step1">
             <div class="instruction">
                 <span class="step-badge" data-fr="Étape 1 / 8" data-en="Step 1 / 8">Étape 1 / 8</span>
                 <h2 data-fr="Accès à ScienceDirect" data-en="Access ScienceDirect">Accès à ScienceDirect</h2>
@@ -598,7 +862,7 @@
         </section>
 
         <!-- STEP 2 -->
-        <section class="step">
+        <section class="step" id="step2">
             <div class="instruction">
                 <span class="step-badge" data-fr="Étape 2 / 8" data-en="Step 2 / 8">Étape 2 / 8</span>
                 <h2 data-fr="Recherche sur ScienceDirect" data-en="Search on ScienceDirect">Recherche sur ScienceDirect</h2>
@@ -614,7 +878,7 @@
         </section>
 
         <!-- STEP 3 -->
-        <section class="step">
+        <section class="step" id="step3">
             <div class="instruction">
                 <span class="step-badge" data-fr="Étape 3 / 8" data-en="Step 3 / 8">Étape 3 / 8</span>
                 <h2 data-fr="Sélection des Résultats" data-en="Select Results">Sélection des Résultats</h2>
@@ -629,7 +893,7 @@
         </section>
 
         <!-- STEP 4 -->
-        <section class="step">
+        <section class="step" id="step4">
             <div class="instruction">
                 <span class="step-badge" data-fr="Étape 4 / 8" data-en="Step 4 / 8">Étape 4 / 8</span>
                 <h2 data-fr="Menu d'Exportation" data-en="Export Menu">Menu d'Exportation</h2>
@@ -644,7 +908,7 @@
         </section>
 
         <!-- STEP 5 -->
-        <section class="step">
+        <section class="step" id="step5">
             <div class="instruction">
                 <span class="step-badge" data-fr="Étape 5 / 8" data-en="Step 5 / 8">Étape 5 / 8</span>
                 <h2 data-fr="Choix du Format" data-en="Format Selection">Choix du Format</h2>
@@ -682,7 +946,7 @@
         </div>
 
         <!-- STEP 6 -->
-        <section class="step">
+        <section class="step" id="step6">
             <div class="instruction">
                 <span class="step-badge" data-fr="Étape 6 / 8" data-en="Step 6 / 8">Étape 6 / 8</span>
                 <h2 data-fr="Téléchargement du Fichier" data-en="File Download">Téléchargement du Fichier</h2>
@@ -702,7 +966,7 @@
         </section>
 
         <!-- STEP 7 -->
-        <section class="step">
+        <section class="step" id="step7">
             <div class="instruction">
                 <span class="step-badge" data-fr="Étape 7 / 8" data-en="Step 7 / 8">Étape 7 / 8</span>
                 <h2 data-fr="Import dans Zotero" data-en="Import into Zotero">Import dans Zotero</h2>
@@ -717,7 +981,7 @@
         </section>
 
         <!-- STEP 8 -->
-        <section class="step">
+        <section class="step" id="step8">
             <div class="instruction">
                 <span class="step-badge" data-fr="Étape 8 / 8" data-en="Step 8 / 8">Étape 8 / 8</span>
                 <h2 data-fr="Vérification et Utilisation" data-en="Verification and Usage">Vérification et Utilisation</h2>
@@ -783,9 +1047,9 @@
         <a href="https://www.univ-reims.fr/bu/bibliotheques/bu-moulin-de-la-housse/bu-moulin-de-la-housse,9206,17210.html"
             target="_blank"
             data-fr="Contacter la BU" data-en="Contact the Library">Contacter la BU</a>
-        <p class="credits"
-            data-fr="Projet SAé 1.05 — IUT de Reims<br>Réalisé par Ayoub SEGHIR & Khalil MOUGHAMIR"
-            data-en="SAé 1.05 Project — IUT de Reims<br>Created by Ayoub SEGHIR & Khalil MOUGHAMIR">Projet SAé 1.05 — IUT de Reims<br>Réalisé par Ayoub SEGHIR & Khalil MOUGHAMIR</p>
+        <p style="margin-top: 60px; font-size: 0.8rem; color: #5a5048;"
+            data-fr="Réalisé par Ayoub SEGHIR & Khalil MOUGHAMIR"
+            data-en="Created by Ayoub SEGHIR & Khalil MOUGHAMIR">Réalisé par Ayoub SEGHIR & Khalil MOUGHAMIR</p>
     </footer>
 
     <!-- LIGHTBOX -->
@@ -917,6 +1181,39 @@
 
         const savedLang = localStorage.getItem('tuto_lang') || 'fr';
         setLang(savedLang);
+
+        /* ---- STEP SIDEBAR ---- */
+        const sidebarNodes = document.querySelectorAll('.sidebar-node');
+
+        function setActiveNode(stepId) {
+            sidebarNodes.forEach(node => {
+                node.classList.toggle('active', node.dataset.step === stepId);
+            });
+        }
+
+        // Scroll smooth sur clic
+        sidebarNodes.forEach(node => {
+            node.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.getElementById(node.dataset.step);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        });
+
+        // Détecter l'étape active au scroll via IntersectionObserver
+        const stepSections = document.querySelectorAll('.step[id]');
+        let currentActive = 'step1';
+
+        const sidebarObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    currentActive = entry.target.id;
+                    setActiveNode(currentActive);
+                }
+            });
+        }, { threshold: 0.4 });
+
+        stepSections.forEach(section => sidebarObserver.observe(section));
     </script>
 
 </body>
