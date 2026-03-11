@@ -725,10 +725,249 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 32px rgba(232, 96, 26, 0.4);
         }
+
+        /* ---- PROGRESS BAR ---- */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-color), #ff8c42);
+            z-index: 9999;
+            transition: width 0.1s linear;
+            border-radius: 0 2px 2px 0;
+            pointer-events: none;
+        }
+
+        /* ---- BACK TO TOP ---- */
+        #back-to-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s, transform 0.3s, background 0.2s, box-shadow 0.2s;
+            z-index: 500;
+            box-shadow: 0 4px 16px rgba(232, 96, 26, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #back-to-top:hover {
+            background: #C94F10;
+            box-shadow: 0 6px 22px rgba(232, 96, 26, 0.5);
+        }
+
+        @media (max-width: 600px) {
+            #back-to-top { bottom: 18px; left: 14px; width: 38px; height: 38px; font-size: 1rem; }
+        }
+
+        /* ---- SKIP LINK ---- */
+        .skip-link {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            background: var(--accent-color);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            font-weight: 600;
+            z-index: 10001;
+            border-radius: 0 0 8px 0;
+            transition: top 0.2s;
+        }
+        .skip-link:focus { top: 0; }
+
+        /* ---- READING TIME ---- */
+        .reading-time {
+            color: var(--text-secondary);
+            font-size: 0.86rem;
+            margin-top: 10px;
+            letter-spacing: 0.02em;
+        }
+
+        /* ---- STEP DONE (progress checkboxes) ---- */
+        .step-done-wrap {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .step-done-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            user-select: none;
+            transition: color 0.2s;
+        }
+
+        .step-done-label:hover { color: var(--accent-color); }
+
+        .step-done-check {
+            accent-color: var(--accent-color);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .sidebar-node.done .sidebar-square {
+            background: #1a7a38;
+            border-color: #1a7a38;
+        }
+
+        .sidebar-node.done.active .sidebar-square {
+            background: #1a7a38;
+            border-color: #1a7a38;
+            box-shadow: 0 0 0 5px rgba(26, 122, 56, 0.18), 0 4px 14px rgba(26, 122, 56, 0.4);
+        }
+
+        /* ---- COPY BUTTON ---- */
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.07);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.78em;
+            padding: 2px 6px;
+            margin-left: 4px;
+            color: var(--text-secondary);
+            vertical-align: middle;
+            transition: background 0.2s, color 0.2s;
+            font-family: inherit;
+            line-height: 1.4;
+        }
+
+        .copy-btn:hover { background: var(--accent-color); color: white; }
+
+        /* ---- DARK MODE TOGGLE ---- */
+        .dark-mode-btn {
+            position: absolute;
+            right: 128px;
+            background: rgba(0, 0, 0, 0.05);
+            border: none;
+            border-radius: 10px;
+            padding: 8px 10px;
+            cursor: pointer;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.3s;
+        }
+
+        .dark-mode-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: rotate(20deg);
+        }
+
+        @media (max-width: 900px) {
+            .dark-mode-btn { position: static; padding: 6px 8px; }
+        }
+
+        /* ---- DARK MODE ---- */
+        body.dark-mode {
+            --bg-color: #1A1714;
+            --card-bg: #232019;
+            --text-primary: #F0EBE4;
+            --text-dark: #F0EBE4;
+            --text-secondary: #8A8480;
+        }
+
+        body.dark-mode header {
+            background: rgba(26, 23, 20, 0.88) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.07);
+        }
+
+        body.dark-mode .lang-btn {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        body.dark-mode .lang-dropdown {
+            background: #2C2722;
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        body.dark-mode .lang-option { color: var(--text-primary); }
+        body.dark-mode .lang-option:hover { background: #3A3028; }
+
+        body.dark-mode .prereq-block {
+            background: var(--card-bg);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+        }
+
+        body.dark-mode code {
+            background: rgba(255, 255, 255, 0.09);
+            color: #e8836b;
+        }
+
+        body.dark-mode .quiz-section {
+            background: var(--card-bg) !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        body.dark-mode .step-done-wrap {
+            border-top-color: rgba(255, 255, 255, 0.06);
+        }
+
+        body.dark-mode .sidebar-tooltip {
+            background: #2C2722;
+        }
+
+        body.dark-mode .sidebar-tooltip::after {
+            border-left-color: #2C2722;
+        }
+
+        body.dark-mode .dark-mode-btn { color: var(--text-primary); }
+
+        body.dark-mode .aide-btn {
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text-primary);
+        }
+
+        body.dark-mode .back-link { color: #ff8c42; }
+
+        body.dark-mode [style*="background: #F0F7FF"] {
+            background: #1A2535 !important;
+            border-color: #2A4A6A !important;
+        }
+
+        body.dark-mode [style*="background: rgba(232, 96, 26, 0.1)"] {
+            background: rgba(232, 96, 26, 0.15) !important;
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- SKIP LINK -->
+    <a href="#main-content" class="skip-link" data-fr="Aller au contenu" data-en="Skip to content">Aller au contenu</a>
+
+    <!-- PROGRESS BAR -->
+    <div id="progress-bar" role="progressbar" aria-label="Progression de lecture"></div>
 
     <header>
         <div class="header-content">
@@ -738,6 +977,9 @@
             <a href="https://www.univ-reims.fr/bu/bibliotheques/bu-moulin-de-la-housse/bu-moulin-de-la-housse,9206,17210.html"
                 target="_blank" class="aide-btn"
                 data-fr="Aide" data-en="Help">Aide</a>
+
+            <!-- DARK MODE TOGGLE -->
+            <button id="darkModeToggle" class="dark-mode-btn" aria-label="Mode sombre" title="Mode sombre"></button>
 
             <!-- LANG SELECTOR -->
             <div class="lang-selector" id="langSelector">
@@ -762,13 +1004,14 @@
         </div>
     </header>
 
-    <main>
+    <main id="main-content">
         <div class="intro" style="text-align: center; margin-top: 30px; margin-bottom: 70px;">
             <h2 style="font-weight: 600; font-size: 1.8rem; color: var(--accent-color); line-height: 1.4; max-width: 700px; margin: 0 auto;"
                 data-fr="Guide d'exportation ScienceDirect vers Zotero."
                 data-en="Guide for exporting from ScienceDirect to Zotero.">
                 Guide d'exportation ScienceDirect vers Zotero.
             </h2>
+            <p class="reading-time" data-fr="⏱ Lecture estimée : ~5 min" data-en="⏱ Estimated reading time: ~5 min">⏱ Lecture estimée : ~5 min</p>
         </div>
 
         <!-- Média Audiovisuel -->
@@ -1052,6 +1295,9 @@
             data-en="Created by Ayoub SEGHIR & Khalil MOUGHAMIR">Réalisé par Ayoub SEGHIR & Khalil MOUGHAMIR</p>
     </footer>
 
+    <!-- BACK TO TOP -->
+    <button id="back-to-top" aria-label="Retour en haut" title="Retour en haut">↑</button>
+
     <!-- LIGHTBOX -->
     <div id="lightbox">
         <button id="lightbox-close" title="Fermer">&times;</button>
@@ -1067,7 +1313,6 @@
         const lbClose = document.getElementById('lightbox-close');
         const lbPrev = document.getElementById('lb-prev');
         const lbNext = document.getElementById('lb-next');
-
         const lbImages = Array.from(document.querySelectorAll('.visual img'));
         let lbIndex = 0;
 
@@ -1095,12 +1340,6 @@
         lbNext.addEventListener('click', () => { if (lbIndex < lbImages.length - 1) openLightbox(lbIndex + 1); });
         lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
         lbClose.addEventListener('click', closeLightbox);
-        document.addEventListener('keydown', e => {
-            if (!lb.classList.contains('active')) return;
-            if (e.key === 'Escape') closeLightbox();
-            if (e.key === 'ArrowLeft' && lbIndex > 0) openLightbox(lbIndex - 1);
-            if (e.key === 'ArrowRight' && lbIndex < lbImages.length - 1) openLightbox(lbIndex + 1);
-        });
 
         /* ---- SCROLL ANIMATION ---- */
         const observer = new IntersectionObserver((entries) => {
@@ -1184,14 +1423,17 @@
 
         /* ---- STEP SIDEBAR ---- */
         const sidebarNodes = document.querySelectorAll('.sidebar-node');
+        const stepIds = ['step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7', 'step8'];
 
         function setActiveNode(stepId) {
             sidebarNodes.forEach(node => {
-                node.classList.toggle('active', node.dataset.step === stepId);
+                const isActive = node.dataset.step === stepId;
+                node.classList.toggle('active', isActive);
+                if (isActive) node.setAttribute('aria-current', 'step');
+                else node.removeAttribute('aria-current');
             });
         }
 
-        // Scroll smooth sur clic
         sidebarNodes.forEach(node => {
             node.addEventListener('click', e => {
                 e.preventDefault();
@@ -1200,7 +1442,6 @@
             });
         });
 
-        // Détecter l'étape active au scroll via IntersectionObserver
         const stepSections = document.querySelectorAll('.step[id]');
         let currentActive = 'step1';
 
@@ -1214,6 +1455,111 @@
         }, { threshold: 0.4 });
 
         stepSections.forEach(section => sidebarObserver.observe(section));
+
+        /* ---- KEYBOARD NAVIGATION ---- */
+        document.addEventListener('keydown', e => {
+            if (lb.classList.contains('active')) {
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowLeft' && lbIndex > 0) openLightbox(lbIndex - 1);
+                if (e.key === 'ArrowRight' && lbIndex < lbImages.length - 1) openLightbox(lbIndex + 1);
+                return;
+            }
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            const idx = stepIds.indexOf(currentActive);
+            if ((e.key === 'ArrowRight' || e.key === 'ArrowDown') && idx < stepIds.length - 1) {
+                e.preventDefault();
+                document.getElementById(stepIds[idx + 1])?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            if ((e.key === 'ArrowLeft' || e.key === 'ArrowUp') && idx > 0) {
+                e.preventDefault();
+                document.getElementById(stepIds[idx - 1])?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+        /* ---- PROGRESS BAR ---- */
+        const progressBar = document.getElementById('progress-bar');
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            progressBar.style.width = (scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0) + '%';
+        }, { passive: true });
+
+        /* ---- BACK TO TOP ---- */
+        const backToTop = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
+        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        /* ---- DARK MODE ---- */
+        const darkToggle = document.getElementById('darkModeToggle');
+        const moonIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+        const sunIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+
+        function applyTheme(isDark) {
+            document.body.classList.toggle('dark-mode', isDark);
+            darkToggle.innerHTML = isDark ? sunIcon : moonIcon;
+            darkToggle.setAttribute('aria-label', isDark
+                ? (currentLang === 'en' ? 'Light mode' : 'Mode clair')
+                : (currentLang === 'en' ? 'Dark mode' : 'Mode sombre'));
+        }
+
+        const savedTheme = localStorage.getItem('tuto_theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+
+        darkToggle.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('tuto_theme', isDark ? 'dark' : 'light');
+            darkToggle.innerHTML = isDark ? sunIcon : moonIcon;
+        });
+
+        /* ---- STEP COMPLETION CHECKBOXES ---- */
+        document.querySelectorAll('.step[id]').forEach(step => {
+            const stepId = step.id;
+            const instruction = step.querySelector('.instruction');
+            if (!instruction) return;
+            const wrap = document.createElement('div');
+            wrap.className = 'step-done-wrap';
+            wrap.innerHTML = `<label class="step-done-label">
+                <input type="checkbox" class="step-done-check" data-step="${stepId}">
+                <span data-fr="Étape terminée ✓" data-en="Step done ✓">Étape terminée ✓</span>
+            </label>`;
+            instruction.appendChild(wrap);
+        });
+
+        function loadProgress() {
+            document.querySelectorAll('.step-done-check').forEach(check => {
+                const stepId = check.dataset.step;
+                check.checked = localStorage.getItem('step_done_' + stepId) === '1';
+                document.querySelector(`.sidebar-node[data-step="${stepId}"]`)
+                    ?.classList.toggle('done', check.checked);
+                check.addEventListener('change', () => {
+                    localStorage.setItem('step_done_' + stepId, check.checked ? '1' : '0');
+                    document.querySelector(`.sidebar-node[data-step="${stepId}"]`)
+                        ?.classList.toggle('done', check.checked);
+                });
+            });
+        }
+        loadProgress();
+
+        /* ---- COPY BUTTONS (for <code> elements) ---- */
+        document.querySelectorAll('code').forEach(codeEl => {
+            const text = codeEl.textContent.trim();
+            if (!text || text.length < 3) return;
+            const btn = document.createElement('button');
+            btn.className = 'copy-btn';
+            btn.title = 'Copier';
+            btn.textContent = '⎘';
+            btn.addEventListener('click', e => {
+                e.stopPropagation();
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = '✓';
+                    setTimeout(() => btn.textContent = '⎘', 1500);
+                });
+            });
+            codeEl.insertAdjacentElement('afterend', btn);
+        });
     </script>
 
 </body>
